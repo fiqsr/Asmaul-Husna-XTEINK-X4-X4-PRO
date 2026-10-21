@@ -374,6 +374,25 @@
       ctx.fillStyle = "#222222";
       ctx.fillText("github.com/fiqsr/Asmaul-Husna-XTEINK-X4-X4-PRO", 240, curY);
 
+      // Keterangan Gratis & Tidak Untuk Diperjualbelikan
+      curY += 32;
+      ctx.beginPath();
+      ctx.moveTo(80, curY);
+      ctx.lineTo(400, curY);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      curY += 14;
+
+      ctx.font = "bold 16px 'Roboto', sans-serif";
+      ctx.fillStyle = "#000000";
+      ctx.fillText("GRATIS • TIDAK UNTUK DIPERJUALBELIKAN", 240, curY);
+      curY += 22;
+
+      ctx.font = "14px 'Lato', sans-serif";
+      ctx.fillStyle = "#333333";
+      ctx.fillText("Proyek non-komersial • Bebas disebarluaskan untuk kebaikan", 240, curY);
+
       // Bottom footer
       ctx.font = "15px 'Roboto', sans-serif";
       ctx.fillStyle = "#333333";
