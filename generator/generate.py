@@ -38,8 +38,15 @@ f_penutup_ar = ImageFont.truetype(amiri_path, 38)
 f_penutup_arti = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 16)
 f_penutup_meta = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 13)
 
-def render_arabic(text, font):
-    reshaped = arabic_reshaper.reshape(text)
+reshaper = arabic_reshaper.ArabicReshaper(
+    configuration={
+        'delete_harakat': False,
+        'support_ligatures': True
+    }
+)
+
+def render_arabic(text, font=None):
+    reshaped = reshaper.reshape(text)
     return get_display(reshaped)
 
 def wrap_text(text, max_chars=38):
