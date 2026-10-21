@@ -56,10 +56,10 @@ f_cover_meta = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 13)
 
 # Content Fonts
 f_no = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 13)
-f_ar = ImageFont.truetype(amiri_path, 50)
-f_latin = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 24)
-f_arti = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 17)
-f_page_num = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 17)
+f_ar = ImageFont.truetype(amiri_path, 46)
+f_latin = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 22)
+f_arti = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 16)
+f_page_num = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 16)
 
 # Penutup Fonts
 f_penutup_ar = ImageFont.truetype(amiri_path, 38)
@@ -126,74 +126,43 @@ def render_content_page(page_items, page_num):
     img = Image.new("L", (width, height), 255)
     draw = ImageDraw.Draw(img)
 
-    # 3 balanced slots dividing the 800px height evenly
-    slots = [
-        (16, 260),
-        (260, 504),
-        (504, 748)
-    ]
+    slot_tops = [16, 260, 504]
+    slot_h = 244
 
     for i, item in enumerate(page_items):
-        s_top, s_bottom = slots[i]
-        s_h = s_bottom - s_top
+        sy = slot_tops[i]
 
-        # 1. Measurements
+        # 1. Asma Number (100% FIXED Y: sy + 16)
         no_str = f"ASMA {item['urutan']} / 99"
         bb_no = draw.textbbox((0, 0), no_str, font=f_no)
         w_no = bb_no[2] - bb_no[0]
-        h_no = bb_no[3] - bb_no[1]
+        draw.text(((width - w_no) // 2, sy + 16), no_str, fill=90, font=f_no)
 
+        # 2. Arabic with Full Harakat (100% FIXED Y: sy + 44)
         ar_bidi = render_content_arabic(item['arab'])
         bb_ar = draw.textbbox((0, 0), ar_bidi, font=f_ar)
         w_ar = bb_ar[2] - bb_ar[0]
-        h_ar = bb_ar[3] - bb_ar[1]
+        draw.text(((width - w_ar) // 2, sy + 44), ar_bidi, fill=0, font=f_ar)
 
+        # 3. Latin Name (100% FIXED Y: sy + 136)
         bb_lat = draw.textbbox((0, 0), item['latin'], font=f_latin)
         w_lat = bb_lat[2] - bb_lat[0]
-        h_lat = bb_lat[3] - bb_lat[1]
+        draw.text(((width - w_lat) // 2, sy + 136), item['latin'], fill=0, font=f_latin)
 
+        # 4. Arti / Translation (100% FIXED Y: sy + 170)
         arti_lines = wrap_text(item['arti'], max_chars=36)
-        line_h = 24
-        h_arti_total = len(arti_lines) * line_h
-
-        # Spacing gaps (generous, well-spaced)
-        gap_no_ar = 18
-        gap_ar_lat = 24
-        gap_lat_arti = 14
-
-        # Total block height
-        total_block_h = h_no + gap_no_ar + h_ar + gap_ar_lat + h_lat + gap_lat_arti + h_arti_total
-
-        # Exact vertical centering within slot
-        start_y = s_top + (s_h - total_block_h) // 2
-
-        # Draw 1: ASMA No (Centered)
-        y_no = start_y
-        draw.text(((width - w_no) // 2, y_no), no_str, fill=90, font=f_no)
-
-        # Draw 2: Arabic (Amiri, Centered, Full Harakat)
-        glyph_top_ar = y_no + h_no + gap_no_ar
-        y_ar = glyph_top_ar - bb_ar[1]
-        draw.text(((width - w_ar) // 2, y_ar), ar_bidi, fill=0, font=f_ar)
-
-        # Draw 3: Latin Name (Centered, Bold)
-        glyph_bot_ar = y_ar + bb_ar[3]
-        y_lat = glyph_bot_ar + gap_ar_lat
-        draw.text(((width - w_lat) // 2, y_lat), item['latin'], fill=0, font=f_latin)
-
-        # Draw 4: Arti / Translation (Centered, Wrapped, No truncation)
-        y_arti = y_lat + h_lat + gap_lat_arti
+        cur_arti_y = sy + 170
         for line in arti_lines:
             bb_line = draw.textbbox((0, 0), line, font=f_arti)
             w_line = bb_line[2] - bb_line[0]
-            draw.text(((width - w_line) // 2, y_arti), line, fill=20, font=f_arti)
-            y_arti += line_h
+            draw.text(((width - w_line) // 2, cur_arti_y), line, fill=20, font=f_arti)
+            cur_arti_y += 22
 
-        # Symmetrical divider line between cards
+        # Symmetrical divider line between cards (at sy + 244)
         if i < 2:
-            draw.line([(32, s_bottom), (width - 32, s_bottom)], fill=140, width=1)
+            draw.line([(32, sy + slot_h), (width - 32, sy + slot_h)], fill=140, width=1)
 
-    # Page number at bottom (Centered)
+    # Page number at bottom (Centered, FIXED Y: 764)
     p_str = str(page_num)
     bb_p = draw.textbbox((0, 0), p_str, font=f_page_num)
     w_p = bb_p[2] - bb_p[0]

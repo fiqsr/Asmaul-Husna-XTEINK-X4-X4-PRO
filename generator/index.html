@@ -274,17 +274,35 @@
     function renderContent(pageNum) {
       const startIdx = (pageNum - 1) * 3;
       const chunk = asmaData.slice(startIdx, startIdx + 3);
-      const slots = [
-        [16, 260],
-        [260, 504],
-        [504, 748]
-      ];
+      const slotTops = [16, 260, 504];
+      const slotH = 244;
 
       chunk.forEach((item, i) => {
-        const [sTop, sBottom] = slots[i];
-        const sH = sBottom - sTop;
+        const sy = slotTops[i];
 
-        // Word wrap arti
+        // 1. Asma No (Centered, 100% FIXED Y: sy + 16)
+        ctx.textBaseline = "top";
+        ctx.textAlign = "center";
+        ctx.font = "13px 'Segoe UI', Roboto, sans-serif";
+        ctx.fillStyle = "#555555";
+        ctx.fillText(`ASMA ${item.urutan} / 99`, 240, sy + 16);
+
+        // 2. Arabic with Full Harakat (Amiri, Centered, 100% FIXED baseline: sy + 98)
+        ctx.textBaseline = "alphabetic";
+        ctx.font = "46px 'Amiri', serif";
+        ctx.fillStyle = "#000000";
+        ctx.direction = "rtl";
+        ctx.fillText(item.arab, 240, sy + 98);
+        ctx.direction = "ltr";
+
+        // 3. Latin Name (Centered, Bold, 100% FIXED Y: sy + 136)
+        ctx.textBaseline = "top";
+        ctx.font = "bold 22px 'Segoe UI', Roboto, sans-serif";
+        ctx.fillText(item.latin, 240, sy + 136);
+
+        // 4. Arti / Translation (Centered, 100% FIXED start Y: sy + 170)
+        ctx.font = "16px 'Segoe UI', Roboto, sans-serif";
+        ctx.fillStyle = "#222222";
         const words = item.arti.split(" ");
         const artiLines = [];
         let curLine = "";
@@ -298,71 +316,27 @@
         }
         if (curLine) artiLines.push(curLine);
 
-        // Precise vertical layout:
-        // Measure Arabic metrics to strictly prevent harakat overlap
-        ctx.font = "50px 'Amiri', serif";
-        const mAr = ctx.measureText(item.arab);
-        const arAscent = mAr.actualBoundingBoxAscent ? Math.max(mAr.actualBoundingBoxAscent, 48) : 52;
-        const arDescent = mAr.actualBoundingBoxDescent ? Math.max(mAr.actualBoundingBoxDescent, 18) : 22;
-
-        const hNo = 14;
-        const hLat = 22;
-        const lineH = 22;
-        const hArtiTotal = artiLines.length * lineH;
-
-        const gapNoAr = 24;   // generous gap between ASMA header and Arabic top harakat
-        const gapArLat = 22;  // gap between Arabic bottom and Latin name
-        const gapLatArti = 12; // gap between Latin name and Arti
-
-        const totalBlockH = hNo + gapNoAr + (arAscent + arDescent) + gapArLat + hLat + gapLatArti + hArtiTotal;
-        const startY = sTop + Math.floor((sH - totalBlockH) / 2);
-
-        // 1. Asma No (Centered)
-        ctx.textBaseline = "top";
-        ctx.textAlign = "center";
-        ctx.font = "13px 'Segoe UI', Roboto, sans-serif";
-        ctx.fillStyle = "#555555";
-        ctx.fillText(`ASMA ${item.urutan} / 99`, 240, startY);
-
-        // 2. Arabic with FULL HARAKAT (Baseline positioned with arAscent to guarantee NO overlap)
-        const arBaselineY = startY + hNo + gapNoAr + arAscent;
-        ctx.textBaseline = "alphabetic";
-        ctx.font = "50px 'Amiri', serif";
-        ctx.fillStyle = "#000000";
-        ctx.direction = "rtl";
-        ctx.fillText(item.arab, 240, arBaselineY);
-        ctx.direction = "ltr";
-
-        // 3. Latin Name (Centered, Bold)
-        const latTopY = arBaselineY + arDescent + gapArLat;
-        ctx.textBaseline = "top";
-        ctx.font = "bold 24px 'Segoe UI', Roboto, sans-serif";
-        ctx.fillText(item.latin, 240, latTopY);
-
-        // 4. Arti / Translation (Centered)
-        ctx.font = "17px 'Segoe UI', Roboto, sans-serif";
-        ctx.fillStyle = "#222222";
-        let curArtiY = latTopY + hLat + gapLatArti;
+        let curArtiY = sy + 170;
         for (const line of artiLines) {
           ctx.fillText(line, 240, curArtiY);
-          curArtiY += lineH;
+          curArtiY += 22;
         }
 
-        // Divider line between cards
+        // Divider line between cards (100% FIXED Y: sy + slotH)
         if (i < 2) {
           ctx.beginPath();
-          ctx.moveTo(32, sBottom);
-          ctx.lineTo(480 - 32, sBottom);
+          ctx.moveTo(32, sy + slotH);
+          ctx.lineTo(480 - 32, sy + slotH);
           ctx.strokeStyle = "#888888";
           ctx.lineWidth = 1;
           ctx.stroke();
         }
       });
 
-      // Page number at bottom (Centered)
+      // Page number at bottom (Centered, 100% FIXED Y: 764)
       ctx.textBaseline = "top";
       ctx.textAlign = "center";
-      ctx.font = "bold 17px 'Segoe UI', Roboto, sans-serif";
+      ctx.font = "bold 16px 'Segoe UI', Roboto, sans-serif";
       ctx.fillStyle = "#000000";
       ctx.fillText(String(pageNum), 240, 764);
     }
