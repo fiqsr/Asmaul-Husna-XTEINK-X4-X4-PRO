@@ -205,7 +205,7 @@ def render_info_page():
         cur_y += 18
 
     # Bottom footer
-    ft = "Semoga Bermanfaat • 2026"
+    ft = "Xteink X4 & X4 Pro E-Reader Edition • v 1.0 - 2026"
     bb_f = draw.textbbox((0, 0), ft, font=f_info_sub)
     draw.text(((width - (bb_f[2] - bb_f[0])) // 2, 762), ft, fill=80, font=f_info_sub)
 

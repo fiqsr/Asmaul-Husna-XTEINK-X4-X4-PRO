@@ -140,7 +140,7 @@
   <header class="app-bar">
     <div>
       <h1>Generator Asma'ul Husna untuk Xteink X4 &amp; X4 Pro</h1>
-      <p>Simetris • Lengkap Harakat • Font Amiri • 480x800 E-Ink • by fiqsr</p>
+      <p>Teks Tebal &amp; Tajam • Lengkap Harakat • Font Amiri • 480x800 E-Ink</p>
     </div>
     <button id="btnExport" class="btn export-btn">EXPORT .XTC</button>
   </header>
@@ -200,7 +200,7 @@
       // Item 1: Info & QR
       const liInfo = document.createElement("li");
       liInfo.className = "asma-item" + (currentPage === 1 ? " active" : "");
-      liInfo.innerHTML = '<span class="urutan">01</span><span class="latin">Informasi &amp; Sumber Proyek</span><span class="arab">QR</span>';
+      liInfo.innerHTML = '<span class="urutan">01</span><span class="latin">Informasi &amp; Sumber</span><span class="arab">QR</span>';
       liInfo.onclick = () => {
         currentPage = 1;
         renderList();
@@ -262,30 +262,30 @@
     function renderCover() {
       const rightX = 424; // Reference right axis
       ctx.textBaseline = "top";
-
-      // 1. Arabic: Tahoma Bold, right-aligned to rightX
       ctx.textAlign = "right";
       ctx.fillStyle = "#000000";
-      ctx.font = "bold 48px Tahoma, 'Segoe UI', Arial, sans-serif";
-      ctx.fillText("الأسماء الحسنى", rightX, 240);
 
-      // 2. Title: right-aligned, Y = 375
-      ctx.font = "bold 34px 'Segoe UI', Roboto, sans-serif";
-      ctx.fillText("Asma'ul Husna", rightX, 375);
+      // 1. Arabic: Tahoma Bold, right-aligned to rightX, Y = 230
+      ctx.font = "bold 52px Tahoma, 'Segoe UI', Arial, sans-serif";
+      ctx.fillText("الأسماء الحسنى", rightX, 230);
 
-      // 3. Subtitle: right-aligned, Y = 420
-      ctx.font = "22px 'Segoe UI', Roboto, sans-serif";
-      ctx.fillText("99 Nama-Nama Agung Allah", rightX, 420);
+      // 2. Title: right-aligned, Y = 370
+      ctx.font = "bold 38px 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("Asma'ul Husna", rightX, 370);
 
-      // 4. Metadata block with fiqsr info: right-aligned, Y = 563+
-      ctx.font = "bold 16px 'Segoe UI', Roboto, sans-serif";
-      ctx.fillText("99 Asma • Teks Arab, Latin & Arti", rightX, 563);
+      // 3. Subtitle: right-aligned, Y = 422
+      ctx.font = "bold 22px 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("99 Nama-Nama Agung Allah", rightX, 422);
 
-      ctx.font = "13px 'Segoe UI', Roboto, sans-serif";
+      // 4. Metadata block with fiqsr info: right-aligned, Y = 560+
+      ctx.font = "bold 18px 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("99 Asma • Teks Arab, Latin & Arti", rightX, 560);
+
+      ctx.font = "bold 15px 'Segoe UI', Roboto, sans-serif";
       ctx.fillText("Edisi Khusus Xteink X4 & X4 Pro", rightX, 594);
-      ctx.fillText("Disusun oleh: fiqsr", rightX, 614);
-      ctx.fillText("github.com/fiqsr", rightX, 635);
-      ctx.fillText("v 1.0 - 2026", rightX, 656);
+      ctx.fillText("Disusun oleh: fiqsr", rightX, 616);
+      ctx.fillText("github.com/fiqsr", rightX, 638);
+      ctx.fillText("v 1.0 - 2026", rightX, 660);
     }
 
     function renderInfoPage() {
@@ -293,68 +293,67 @@
       ctx.textAlign = "center";
       ctx.fillStyle = "#000000";
 
-      // Title
-      ctx.font = "bold 22px 'Segoe UI', Roboto, sans-serif";
-      ctx.fillText("Informasi & Sumber Proyek", 240, 40);
+      // Title: Bold & Big
+      ctx.font = "bold 26px 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("Informasi & Sumber Proyek", 240, 36);
 
-      ctx.font = "14px 'Segoe UI', Roboto, sans-serif";
-      ctx.fillStyle = "#444444";
-      ctx.fillText("Asma'ul Husna untuk Xteink X4 & X4 Pro", 240, 70);
+      ctx.font = "bold 16px 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("Asma'ul Husna • Xteink X4 & X4 Pro", 240, 70);
 
-      // Divider
+      // Solid 2px divider
       ctx.beginPath();
       ctx.moveTo(32, 98);
       ctx.lineTo(480 - 32, 98);
-      ctx.strokeStyle = "#888888";
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Info text
-      const leftX = 42;
-      let curY = 115;
+      // Info text: Bold, clean, crisp
+      const leftX = 40;
+      let curY = 114;
 
       function drawSection(title, list) {
         ctx.textAlign = "left";
         ctx.fillStyle = "#000000";
-        ctx.font = "bold 14px 'Segoe UI', Roboto, sans-serif";
+        ctx.font = "bold 17px 'Segoe UI', Roboto, sans-serif";
         ctx.fillText(title, leftX, curY);
-        curY += 22;
+        curY += 24;
 
         for (const [lbl, val] of list) {
-          ctx.font = "bold 13px 'Segoe UI', Roboto, sans-serif";
+          ctx.font = "bold 14px 'Segoe UI', Roboto, sans-serif";
           ctx.fillStyle = "#000000";
           ctx.fillText(lbl, leftX + 8, curY);
           const wLbl = ctx.measureText(lbl).width;
 
-          ctx.font = "12px 'Segoe UI', Roboto, sans-serif";
-          ctx.fillStyle = "#333333";
-          ctx.fillText(val, leftX + 8 + wLbl + 8, curY + 1);
-          curY += 19;
+          ctx.font = "bold 14px 'Segoe UI', Roboto, sans-serif";
+          ctx.fillText(val, leftX + 8 + wLbl + 8, curY);
+          curY += 22;
         }
-        curY += 10;
+        curY += 8;
       }
 
       drawSection("Penyusun & Repositori", [
-        ["Kompilasi & Desain:", "fiqsr (github.com/fiqsr)"],
-        ["Format Target:", "Xteink X4 & X4 Pro (480×800 E-Ink)"]
+        ["Penyusun:", "fiqsr (github.com/fiqsr)"],
+        ["Perangkat:", "Xteink X4 & X4 Pro (480×800 E-Ink)"]
       ]);
 
       drawSection("Sumber Data & Referensi", [
-        ["API Data:", "github.com/haikelz/asmaul-husna-api"],
-        ["Harakat & Tasykil:", "github.com/adiman-dev/islamic-json"],
-        ["Format & Arsitektur:", "github.com/andidewanto/xteink-x4-quran-indonesia"],
+        ["API Data:", "haikelz/asmaul-husna-api"],
+        ["Teks & Harakat:", "adiman-dev/islamic-json"],
+        ["Arsitektur XTC:", "andidewanto/xteink-x4-quran-indonesia"],
         ["Font Teks Arab:", "Amiri Font (SIL Open Font License)"]
       ]);
 
-      // Divider
+      // Solid divider
       ctx.beginPath();
-      ctx.moveTo(32, curY + 4);
-      ctx.lineTo(480 - 32, curY + 4);
-      ctx.strokeStyle = "#aaaaaa";
+      ctx.moveTo(32, curY + 2);
+      ctx.lineTo(480 - 32, curY + 2);
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 1;
       ctx.stroke();
-      curY += 18;
+      curY += 16;
 
-      // QR Code
+      // QR Code: Big and crisp
       const qrSize = 190;
       const qrX = (480 - qrSize) / 2;
       const qrY = curY;
@@ -366,71 +365,65 @@
         };
       }
 
-      ctx.strokeStyle = "#cccccc";
+      ctx.strokeStyle = "#000000";
       ctx.lineWidth = 1;
-      ctx.strokeRect(qrX - 3, qrY - 3, qrSize + 6, qrSize + 6);
+      ctx.strokeRect(qrX - 2, qrY - 2, qrSize + 4, qrSize + 4);
 
       curY += qrSize + 14;
 
       ctx.textAlign = "center";
-      ctx.fillStyle = "#444444";
-      ctx.font = "12px 'Segoe UI', Roboto, sans-serif";
-      ctx.fillText("Pindai QR code di atas untuk membuka repositori:", 240, curY);
-      curY += 18;
-
-      ctx.font = "bold 12px 'Segoe UI', Roboto, sans-serif";
       ctx.fillStyle = "#000000";
-      ctx.fillText("github.com/fiqsr/Asmaul-Husna-XTEINK-X4-X4-PRO", 240, curY);
-      curY += 18;
+      ctx.font = "bold 14px 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("Pindai QR code untuk membuka repositori:", 240, curY);
+      curY += 20;
 
-      ctx.font = "12px 'Segoe UI', Roboto, sans-serif";
-      ctx.fillStyle = "#444444";
-      ctx.fillText("Dapatkan rilis .XTC & .EPUB terbaru atau bagikan proyek ini", 240, curY);
+      ctx.font = "bold 14px 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("github.com/fiqsr/Asmaul-Husna-XTEINK-X4-X4-PRO", 240, curY);
 
       // Bottom footer
-      ctx.font = "13px 'Segoe UI', Roboto, sans-serif";
-      ctx.fillStyle = "#666666";
-      ctx.fillText("Xteink X4 & X4 Pro E-Reader Edition • v 1.0 - 2026", 240, 762);
+      ctx.font = "bold 14px 'Segoe UI', Roboto, sans-serif";
+      ctx.fillStyle = "#000000";
+      ctx.fillText("Xteink X4 & X4 Pro E-Reader Edition • 2026", 240, 764);
     }
 
     function renderContent(pageNum) {
       const asmaPageNum = pageNum - 1; // Page 2 is Asma 1-3 (page_num 1)
       const startIdx = (asmaPageNum - 1) * 3;
       const chunk = asmaData.slice(startIdx, startIdx + 3);
-      const slotTops = [16, 260, 504];
+      const slotTops = [14, 258, 502];
       const slotH = 244;
 
       chunk.forEach((item, i) => {
         const sy = slotTops[i];
 
-        // 1. Asma No (Centered, 100% FIXED Y: sy + 16)
+        // 1. Asma No (Centered, Bold 16px, PURE BLACK #000)
         ctx.textBaseline = "top";
         ctx.textAlign = "center";
-        ctx.font = "13px 'Segoe UI', Roboto, sans-serif";
-        ctx.fillStyle = "#555555";
-        ctx.fillText(`ASMA ${item.urutan} / 99`, 240, sy + 16);
+        ctx.font = "bold 16px 'Segoe UI', Roboto, sans-serif";
+        ctx.fillStyle = "#000000";
+        ctx.fillText(`ASMA ${item.urutan} / 99`, 240, sy + 14);
 
-        // 2. Arabic with Full Harakat (Amiri, Centered, 100% FIXED baseline: sy + 98)
+        // 2. Arabic with Full Harakat (Amiri BOLD 54px, Centered, FIXED baseline: sy + 104)
         ctx.textBaseline = "alphabetic";
-        ctx.font = "46px 'Amiri', serif";
+        ctx.font = "bold 54px 'Amiri', serif";
         ctx.fillStyle = "#000000";
         ctx.direction = "rtl";
-        ctx.fillText(item.arab, 240, sy + 98);
+        ctx.fillText(item.arab, 240, sy + 104);
         ctx.direction = "ltr";
 
-        // 3. Latin Name (Centered, Bold, 100% FIXED Y: sy + 136)
+        // 3. Latin Name (Centered, Bold 26px, PURE BLACK)
         ctx.textBaseline = "top";
-        ctx.font = "bold 22px 'Segoe UI', Roboto, sans-serif";
-        ctx.fillText(item.latin, 240, sy + 136);
+        ctx.font = "bold 26px 'Segoe UI', Roboto, sans-serif";
+        ctx.fillText(item.latin, 240, sy + 134);
 
-        // 4. Arti / Translation (Centered, 100% FIXED start Y: sy + 170)
-        ctx.font = "16px 'Segoe UI', Roboto, sans-serif";
-        ctx.fillStyle = "#222222";
+        // 4. Arti / Translation (Centered, Bold 18px, PURE BLACK)
+        ctx.font = "bold 18px 'Segoe UI', Roboto, sans-serif";
+        ctx.fillStyle = "#000000";
         const words = item.arti.split(" ");
         const artiLines = [];
         let curLine = "";
         for (const w of words) {
-          if ((curLine + " " + w).trim().length <= 36) {
+          if ((curLine + " " + w).trim().length <= 32) {
             curLine = (curLine + " " + w).trim();
           } else {
             if (curLine) artiLines.push(curLine);
@@ -442,26 +435,26 @@
         let curArtiY = sy + 170;
         for (const line of artiLines) {
           ctx.fillText(line, 240, curArtiY);
-          curArtiY += 22;
+          curArtiY += 24;
         }
 
-        // Divider line between cards (100% FIXED Y: sy + slotH)
+        // Divider line between cards: Solid 2px BLACK line!
         if (i < 2) {
           ctx.beginPath();
           ctx.moveTo(32, sy + slotH);
           ctx.lineTo(480 - 32, sy + slotH);
-          ctx.strokeStyle = "#888888";
-          ctx.lineWidth = 1;
+          ctx.strokeStyle = "#000000";
+          ctx.lineWidth = 2;
           ctx.stroke();
         }
       });
 
-      // Page number at bottom (Centered, 100% FIXED Y: 764)
+      // Page number at bottom (Centered, Bold 18px, PURE BLACK)
       ctx.textBaseline = "top";
       ctx.textAlign = "center";
-      ctx.font = "bold 16px 'Segoe UI', Roboto, sans-serif";
+      ctx.font = "bold 18px 'Segoe UI', Roboto, sans-serif";
       ctx.fillStyle = "#000000";
-      ctx.fillText(String(asmaPageNum), 240, 764);
+      ctx.fillText(String(asmaPageNum), 240, 762);
     }
 
     function renderPenutup() {
@@ -470,22 +463,22 @@
 
       // Centered Ayat Quran
       ctx.textBaseline = "alphabetic";
-      ctx.font = "38px 'Amiri', serif";
+      ctx.font = "bold 44px 'Amiri', serif";
       ctx.direction = "rtl";
-      ctx.fillText("وَلِلَّهِ الْأَسْمَاءُ الْحُسْنَىٰ فَادْعُوهُ بِهَا", 240, 310);
+      ctx.fillText("وَلِلَّهِ الْأَسْمَاءُ الْحُسْنَىٰ فَادْعُوهُ بِهَا", 240, 290);
       ctx.direction = "ltr";
 
-      // Divider line
+      // Solid Divider line
       ctx.beginPath();
-      ctx.moveTo(180, 345);
-      ctx.lineTo(300, 345);
+      ctx.moveTo(160, 330);
+      ctx.lineTo(320, 330);
       ctx.strokeStyle = "#000000";
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Translation
+      // Translation: Bold 18px
       ctx.textBaseline = "top";
-      ctx.font = "16px 'Segoe UI', Roboto, sans-serif";
+      ctx.font = "bold 18px 'Segoe UI', Roboto, sans-serif";
       const lines = [
         "“Hanya milik Allah asmaaul husna,",
         "maka bermohonlah kepada-Nya",
@@ -493,25 +486,25 @@
         "",
         "QS. Al-A'raf: 180"
       ];
-      let curY = 375;
+      let curY = 360;
       for (const l of lines) {
         if (l) ctx.fillText(l, 240, curY);
-        curY += 24;
+        curY += 26;
       }
 
-      // Bottom notes
-      ctx.font = "13px 'Segoe UI', Roboto, sans-serif";
-      ctx.fillStyle = "#555555";
+      // Bottom notes: Bold 15px
+      ctx.font = "bold 15px 'Segoe UI', Roboto, sans-serif";
+      ctx.fillStyle = "#000000";
       const notes = [
         "Asma'ul Husna untuk Xteink X4 & X4 Pro",
         "Disusun oleh fiqsr • github.com/fiqsr",
         "Format Project: andidewanto/xteink-x4-quran-indonesia",
         "Selesai Dibaca • 99 Asma"
       ];
-      curY = 650;
+      curY = 640;
       for (const n of notes) {
         ctx.fillText(n, 240, curY);
-        curY += 20;
+        curY += 22;
       }
     }
 
@@ -552,7 +545,8 @@
         for (let x = 0; x < lebar; x++) {
           const i = (y * lebar + x) * 4;
           const terang = px[i] * 0.299 + px[i + 1] * 0.587 + px[i + 2] * 0.114;
-          if (terang >= 160) {
+          // Threshold 200 keeps text crisp, full-bodied and sharp on 1-bit e-ink
+          if (terang >= 200) {
             data[y * byteBaris + (x >> 3)] |= 1 << (7 - (x & 7));
           }
         }
@@ -624,6 +618,7 @@
       btn.disabled = false;
       btn.textContent = originalText;
       currentPage = origPage;
+      renderList();
       renderPage(currentPage);
     };
 
