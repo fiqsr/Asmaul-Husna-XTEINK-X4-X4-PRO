@@ -21,35 +21,52 @@ width, height = 480, 800
 amiri_path = "Amiri-Regular.ttf"
 win_fonts = 'C:\\Windows\\Fonts'
 
-# Fonts
-f_cover_ar = ImageFont.truetype(amiri_path, 56)
-f_cover_title = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 34)
-f_cover_sub = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 20)
-f_cover_meta = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 15)
-f_cover_sumber = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 13)
-
-f_no = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 13)
-f_ar = ImageFont.truetype(amiri_path, 48)
-f_latin = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 23)
-f_arti = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 17)
-f_page_num = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 17)
-
-f_penutup_ar = ImageFont.truetype(amiri_path, 38)
-f_penutup_arti = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 16)
-f_penutup_meta = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 13)
-
-reshaper = arabic_reshaper.ArabicReshaper(
+# Reshapers
+# Custom reshaper for Amiri (Content & Penutup) with full harakat preserved
+harakat_reshaper = arabic_reshaper.ArabicReshaper(
     configuration={
         'delete_harakat': False,
         'support_ligatures': True
     }
 )
 
-def render_arabic(text, font=None):
-    reshaped = reshaper.reshape(text)
+# Plain reshaper for Tahoma Bold cover title
+cover_reshaper = arabic_reshaper.ArabicReshaper(
+    configuration={
+        'delete_harakat': True,
+        'support_ligatures': True
+    }
+)
+
+def render_content_arabic(text):
+    reshaped = harakat_reshaper.reshape(text)
     return get_display(reshaped)
 
-def wrap_text(text, max_chars=38):
+def render_cover_arabic(text):
+    reshaped = cover_reshaper.reshape(text)
+    return get_display(reshaped)
+
+# Fonts
+# Cover Fonts (Matching reference example exactly)
+f_cover_ar = ImageFont.truetype(os.path.join(win_fonts, "tahomabd.ttf"), 48)
+f_cover_title = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 34)
+f_cover_sub = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 22)
+f_cover_meta_bold = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 16)
+f_cover_meta = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 13)
+
+# Content Fonts
+f_no = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 13)
+f_ar = ImageFont.truetype(amiri_path, 50)
+f_latin = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 24)
+f_arti = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 17)
+f_page_num = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 17)
+
+# Penutup Fonts
+f_penutup_ar = ImageFont.truetype(amiri_path, 38)
+f_penutup_arti = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 16)
+f_penutup_meta = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 13)
+
+def wrap_text(text, max_chars=36):
     words = text.split()
     lines = []
     cur = ""
@@ -68,38 +85,40 @@ def render_cover():
     img = Image.new("L", (width, height), 255)
     draw = ImageDraw.Draw(img)
 
-    # 1. Arabic Title with full harakat: الْأَسْمَاءُ الْحُسْنَىٰ (Centered horizontally, Y = 220)
-    ar_bidi = render_arabic("الْأَسْمَاءُ الْحُسْنَىٰ", f_cover_ar)
+    right_x = 424  # Exact right boundary matching reference example
+
+    # 1. Arabic Title (Tahoma Bold, right-aligned to right_x, Y = 240)
+    ar_text = "الأسماء الحسنى"
+    ar_bidi = render_cover_arabic(ar_text)
     bb_ar = draw.textbbox((0, 0), ar_bidi, font=f_cover_ar)
     w_ar = bb_ar[2] - bb_ar[0]
-    draw.text(((width - w_ar) // 2, 220), ar_bidi, fill=0, font=f_cover_ar)
+    draw.text((right_x - w_ar, 240), ar_bidi, fill=0, font=f_cover_ar)
 
-    # 2. Main Title: Asma'ul Husna (Centered, Y = 360)
+    # 2. Main Title: Asma'ul Husna (right-aligned, Y = 375)
     title = "Asma'ul Husna"
     bb_t = draw.textbbox((0, 0), title, font=f_cover_title)
     w_t = bb_t[2] - bb_t[0]
-    draw.text(((width - w_t) // 2, 360), title, fill=0, font=f_cover_title)
+    draw.text((right_x - w_t, 375), title, fill=0, font=f_cover_title)
 
-    # 3. Subtitle: 99 Nama-Nama Agung Allah (Centered, Y = 405)
+    # 3. Subtitle: 99 Nama-Nama Agung Allah (right-aligned, Y = 420)
     sub = "99 Nama-Nama Agung Allah"
     bb_s = draw.textbbox((0, 0), sub, font=f_cover_sub)
     w_s = bb_s[2] - bb_s[0]
-    draw.text(((width - w_s) // 2, 405), sub, fill=0, font=f_cover_sub)
+    draw.text((right_x - w_s, 420), sub, fill=0, font=f_cover_sub)
 
     # 4. Bottom Right-aligned Metadata block
-    right_x = width - 48
     meta_lines = [
-        ("99 Asma • Teks Arab, Latin & Arti", f_cover_meta, 560),
-        ("Sumber Data: Asmaul Husna API", f_cover_sumber, 592),
-        ("Repository: haikelz/asmaul-husna-api", f_cover_sumber, 612),
-        ("Format XTC Khusus Perangkat Xteink X4", f_cover_sumber, 632),
-        ("v 1.0 - 2026", f_cover_sumber, 652),
+        ("99 Asma • Teks Arab, Latin & Arti", f_cover_meta_bold, 563),
+        ("Sumber Data: Asmaul Husna API", f_cover_meta, 594),
+        ("Repository: haikelz/asmaul-husna-api", f_cover_meta, 614),
+        ("Format XTC Khusus Perangkat Xteink X4", f_cover_meta, 635),
+        ("v 1.0 - 2026", f_cover_meta, 656),
     ]
 
-    for l, fn, y_pos in meta_lines:
-        bb = draw.textbbox((0, 0), l, font=fn)
+    for line, fn, y_pos in meta_lines:
+        bb = draw.textbbox((0, 0), line, font=fn)
         w = bb[2] - bb[0]
-        draw.text((right_x - w, y_pos), l, fill=0, font=fn)
+        draw.text((right_x - w, y_pos), line, fill=0, font=fn)
 
     return img
 
@@ -107,50 +126,78 @@ def render_content_page(page_items, page_num):
     img = Image.new("L", (width, height), 255)
     draw = ImageDraw.Draw(img)
 
-    slot_starts = [24, 268, 512]
-    slot_height = 236
+    # 3 balanced slots dividing the 800px height evenly
+    slots = [
+        (16, 260),
+        (260, 504),
+        (504, 748)
+    ]
 
     for i, item in enumerate(page_items):
-        sy = slot_starts[i]
+        s_top, s_bottom = slots[i]
+        s_h = s_bottom - s_top
 
-        # 1. Asma number (Centered, subtle)
+        # 1. Measurements
         no_str = f"ASMA {item['urutan']} / 99"
         bb_no = draw.textbbox((0, 0), no_str, font=f_no)
         w_no = bb_no[2] - bb_no[0]
-        draw.text(((width - w_no) // 2, sy), no_str, fill=90, font=f_no)
+        h_no = bb_no[3] - bb_no[1]
 
-        # 2. Arabic with FULL HARAKAT (Amiri font, Centered!)
-        ar_bidi = render_arabic(item['arab'], f_ar)
+        ar_bidi = render_content_arabic(item['arab'])
         bb_ar = draw.textbbox((0, 0), ar_bidi, font=f_ar)
         w_ar = bb_ar[2] - bb_ar[0]
-        ar_y = sy + 22
-        draw.text(((width - w_ar) // 2, ar_y), ar_bidi, fill=0, font=f_ar)
+        h_ar = bb_ar[3] - bb_ar[1]
 
-        # 3. Latin (Centered, Bold)
-        lat_y = ar_y + (bb_ar[3] - bb_ar[1]) + 14
         bb_lat = draw.textbbox((0, 0), item['latin'], font=f_latin)
         w_lat = bb_lat[2] - bb_lat[0]
-        draw.text(((width - w_lat) // 2, lat_y), item['latin'], fill=0, font=f_latin)
+        h_lat = bb_lat[3] - bb_lat[1]
 
-        # 4. Arti (Centered, properly word-wrapped, NO truncation!)
-        arti_lines = wrap_text(item['arti'], max_chars=38)
-        cur_arti_y = lat_y + (bb_lat[3] - bb_lat[1]) + 8
+        arti_lines = wrap_text(item['arti'], max_chars=36)
+        line_h = 24
+        h_arti_total = len(arti_lines) * line_h
+
+        # Spacing gaps (generous, well-spaced)
+        gap_no_ar = 18
+        gap_ar_lat = 24
+        gap_lat_arti = 14
+
+        # Total block height
+        total_block_h = h_no + gap_no_ar + h_ar + gap_ar_lat + h_lat + gap_lat_arti + h_arti_total
+
+        # Exact vertical centering within slot
+        start_y = s_top + (s_h - total_block_h) // 2
+
+        # Draw 1: ASMA No (Centered)
+        y_no = start_y
+        draw.text(((width - w_no) // 2, y_no), no_str, fill=90, font=f_no)
+
+        # Draw 2: Arabic (Amiri, Centered, Full Harakat)
+        glyph_top_ar = y_no + h_no + gap_no_ar
+        y_ar = glyph_top_ar - bb_ar[1]
+        draw.text(((width - w_ar) // 2, y_ar), ar_bidi, fill=0, font=f_ar)
+
+        # Draw 3: Latin Name (Centered, Bold)
+        glyph_bot_ar = y_ar + bb_ar[3]
+        y_lat = glyph_bot_ar + gap_ar_lat
+        draw.text(((width - w_lat) // 2, y_lat), item['latin'], fill=0, font=f_latin)
+
+        # Draw 4: Arti / Translation (Centered, Wrapped, No truncation)
+        y_arti = y_lat + h_lat + gap_lat_arti
         for line in arti_lines:
             bb_line = draw.textbbox((0, 0), line, font=f_arti)
             w_line = bb_line[2] - bb_line[0]
-            draw.text(((width - w_line) // 2, cur_arti_y), line, fill=20, font=f_arti)
-            cur_arti_y += 22
+            draw.text(((width - w_line) // 2, y_arti), line, fill=20, font=f_arti)
+            y_arti += line_h
 
-        # Symmetrical divider line between items
+        # Symmetrical divider line between cards
         if i < 2:
-            div_y = sy + slot_height - 6
-            draw.line([(32, div_y), (width - 32, div_y)], fill=120, width=1)
+            draw.line([(32, s_bottom), (width - 32, s_bottom)], fill=140, width=1)
 
     # Page number at bottom (Centered)
     p_str = str(page_num)
     bb_p = draw.textbbox((0, 0), p_str, font=f_page_num)
     w_p = bb_p[2] - bb_p[0]
-    draw.text(((width - w_p) // 2, 762), p_str, fill=0, font=f_page_num)
+    draw.text(((width - w_p) // 2, 764), p_str, fill=0, font=f_page_num)
 
     return img
 
@@ -158,9 +205,9 @@ def render_penutup():
     img = Image.new("L", (width, height), 255)
     draw = ImageDraw.Draw(img)
 
-    # Centered Ayat Quran with full harakat
+    # Centered Ayat Quran with full harakat in Amiri
     ar_verse = "وَلِلَّهِ الْأَسْمَاءُ الْحُسْنَىٰ فَادْعُوهُ بِهَا"
-    ar_bidi = render_arabic(ar_verse, f_penutup_ar)
+    ar_bidi = render_content_arabic(ar_verse)
     bb_ar = draw.textbbox((0, 0), ar_bidi, font=f_penutup_ar)
     w_ar = bb_ar[2] - bb_ar[0]
     draw.text(((width - w_ar) // 2, 275), ar_bidi, fill=0, font=f_penutup_ar)
@@ -248,7 +295,7 @@ def build_xtc(xtg_blobs):
 # Main Generation
 all_pages = []
 
-print("Rendering Symmetrical Cover...")
+print("Rendering Rata Kanan Cover...")
 cover_img = render_cover()
 all_pages.append(cover_img)
 
@@ -258,7 +305,7 @@ for p_idx in range(0, 99, 3):
     p_img = render_content_page(chunk, page_num)
     all_pages.append(p_img)
 
-print("Rendering Symmetrical Penutup...")
+print("Rendering Penutup...")
 penutup_img = render_penutup()
 all_pages.append(penutup_img)
 
@@ -270,7 +317,8 @@ os.makedirs(preview_dir, exist_ok=True)
 cover_img.save(os.path.join(preview_dir, "00-sampul.png"))
 all_pages[1].save(os.path.join(preview_dir, "01-halaman.png"))
 all_pages[4].save(os.path.join(preview_dir, "02-halaman.png")) # Page 4 (Items 10-12)
-penutup_img.save(os.path.join(preview_dir, "03-penutup.png"))
+all_pages[25].save(os.path.join(preview_dir, "03-halaman-73-75.png")) # Page 25 (Items 73-75)
+penutup_img.save(os.path.join(preview_dir, "04-penutup.png"))
 print("Preview images saved.")
 
 xtg_blobs = [image_to_xtg(img) for img in all_pages]
