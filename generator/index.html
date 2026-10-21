@@ -265,8 +265,13 @@
       ctx.textAlign = "right";
       ctx.fillStyle = "#000000";
 
-      // 1. Arabic Title (matching Andi's cover: bold geometric Arabic, Y = 214)
-      ctx.font = "bold 56px Tahoma, 'Noto Kufi Arabic', sans-serif";
+      // 1. Arabic Title (Safe font size 40px with auto-fit check so it never gets clipped on left)
+      let arabicSize = 40;
+      ctx.font = "bold " + arabicSize + "px Tahoma, 'Noto Kufi Arabic', sans-serif";
+      while (ctx.measureText("الأسماء الحسنى").width > (rightX - 44) && arabicSize > 24) {
+        arabicSize -= 1;
+        ctx.font = "bold " + arabicSize + "px Tahoma, 'Noto Kufi Arabic', sans-serif";
+      }
       ctx.fillText("الأسماء الحسنى", rightX, 220);
 
       // 2. Title: right-aligned, Y = 360
@@ -294,70 +299,55 @@
       ctx.textAlign = "center";
       ctx.fillStyle = "#000000";
 
-      // Header (Clean, balanced)
-      ctx.font = "bold 24px 'Roboto', sans-serif";
-      ctx.fillText("Informasi & Sumber Proyek", 240, 36);
+      // Header (Prominent & Clear)
+      ctx.font = "bold 26px 'Roboto', sans-serif";
+      ctx.fillText("Informasi Proyek", 240, 38);
 
       ctx.font = "16px 'Roboto', sans-serif";
-      ctx.fillStyle = "#333333";
-      ctx.fillText("Asma'ul Husna • Xteink X4 & X4 Pro", 240, 68);
+      ctx.fillStyle = "#222222";
+      ctx.fillText("Asma'ul Husna • Xteink X4 & X4 Pro", 240, 72);
 
       // 1px solid black divider
       ctx.beginPath();
-      ctx.moveTo(32, 96);
-      ctx.lineTo(480 - 32, 96);
+      ctx.moveTo(32, 100);
+      ctx.lineTo(448, 100);
       ctx.strokeStyle = "#000000";
       ctx.lineWidth = 1;
       ctx.stroke();
 
-      // Info text: Crisp Lato & Roboto
-      const leftX = 42;
-      let curY = 114;
+      // Simplified and enlarged info block
+      let curY = 120;
+      const items = [
+        ["Penyusun & Repositori", "fiqsr  •  github.com/fiqsr"],
+        ["Format & Arsitektur .XTC", "andidewanto/xteink-x4-quran-indonesia"],
+        ["Sumber Data Asma'ul Husna", "haikelz/asmaul-husna-api"],
+        ["Kaligrafi Arab", "Amiri Typeface (SIL OFL)"]
+      ];
 
-      function drawSection(title, list) {
-        ctx.textAlign = "left";
-        ctx.fillStyle = "#000000";
+      ctx.textAlign = "left";
+      for (const [label, val] of items) {
         ctx.font = "bold 17px 'Roboto', sans-serif";
-        ctx.fillText(title, leftX, curY);
-        curY += 24;
+        ctx.fillStyle = "#000000";
+        ctx.fillText(label, 36, curY);
+        curY += 23;
 
-        for (const [lbl, val] of list) {
-          ctx.font = "bold 15px 'Lato', sans-serif";
-          ctx.fillStyle = "#000000";
-          ctx.fillText(lbl, leftX + 8, curY);
-          const wLbl = ctx.measureText(lbl).width;
-
-          ctx.font = "15px 'Lato', sans-serif";
-          ctx.fillStyle = "#1a1a1a";
-          ctx.fillText(val, leftX + 8 + wLbl + 8, curY);
-          curY += 21;
-        }
-        curY += 8;
+        ctx.font = "17px 'Lato', sans-serif";
+        ctx.fillStyle = "#111111";
+        ctx.fillText(val, 48, curY);
+        curY += 28;
       }
 
-      drawSection("Penyusun & Repositori", [
-        ["Penyusun:", "fiqsr (github.com/fiqsr)"],
-        ["Perangkat:", "Xteink X4 & X4 Pro (480×800 E-Ink)"]
-      ]);
-
-      drawSection("Sumber Data & Referensi", [
-        ["API Data:", "haikelz/asmaul-husna-api"],
-        ["Teks & Harakat:", "adiman-dev/islamic-json"],
-        ["Arsitektur XTC:", "andidewanto/xteink-x4-quran-indonesia"],
-        ["Font Teks Arab:", "Amiri Font (SIL Open Font License)"]
-      ]);
-
-      // 1px solid divider
+      // 1px divider
       ctx.beginPath();
-      ctx.moveTo(32, curY + 2);
-      ctx.lineTo(480 - 32, curY + 2);
+      ctx.moveTo(32, curY + 6);
+      ctx.lineTo(448, curY + 6);
       ctx.strokeStyle = "#000000";
       ctx.lineWidth = 1;
       ctx.stroke();
-      curY += 16;
+      curY += 22;
 
       // QR Code
-      const qrSize = 190;
+      const qrSize = 180;
       const qrX = (480 - qrSize) / 2;
       const qrY = curY;
       if (qrImage.complete) {
@@ -372,19 +362,19 @@
       ctx.lineWidth = 1;
       ctx.strokeRect(qrX - 2, qrY - 2, qrSize + 4, qrSize + 4);
 
-      curY += qrSize + 14;
+      curY += qrSize + 16;
 
       ctx.textAlign = "center";
-      ctx.fillStyle = "#1a1a1a";
-      ctx.font = "14px 'Lato', sans-serif";
-      ctx.fillText("Pindai QR code untuk membuka repositori:", 240, curY);
-      curY += 20;
-
-      ctx.font = "bold 14px 'Lato', sans-serif";
       ctx.fillStyle = "#000000";
+      ctx.font = "bold 16px 'Roboto', sans-serif";
+      ctx.fillText("Pindai QR Code untuk Membuka Repositori:", 240, curY);
+      curY += 22;
+
+      ctx.font = "15px 'Lato', sans-serif";
+      ctx.fillStyle = "#222222";
       ctx.fillText("github.com/fiqsr/Asmaul-Husna-XTEINK-X4-X4-PRO", 240, curY);
 
-      // Bottom footer (Matching Andi's bottom footer style)
+      // Bottom footer
       ctx.font = "15px 'Roboto', sans-serif";
       ctx.fillStyle = "#333333";
       ctx.fillText("Xteink X4 & X4 Pro E-Reader Edition • 2026", 240, 764);
@@ -415,20 +405,21 @@
         ctx.fillText(item.arab, 240, sy + 96);
         ctx.direction = "ltr";
 
-        // 3. Latin Name (Centered, Lato Bold 24px, matching Andi's Latin style)
+        // 3. Latin Name (Centered, Lato Bold 25px)
         ctx.textBaseline = "top";
-        ctx.font = "bold 24px 'Lato', sans-serif";
+        ctx.font = "bold 25px 'Lato', sans-serif";
         ctx.fillStyle = "#000000";
-        ctx.fillText(item.latin, 240, sy + 136);
+        ctx.fillText(item.latin, 240, sy + 134);
 
-        // 4. Arti / Translation (Centered, Lato Regular 20px, line-height 26px, matching Andi's translation)
-        ctx.font = "20px 'Lato', sans-serif";
-        ctx.fillStyle = "#1a1a1a";
-        const words = item.arti.split(" ");
+        // 4. Arti / Translation (Centered, Lato Bold 21px, sturdy & crisp, NOT thin!)
+        ctx.font = "bold 21px 'Lato', sans-serif";
+        ctx.fillStyle = "#000000";
+        const cleanArti = item.arti.replace(/([^\s])\(/g, "$1 (");
+        const words = cleanArti.split(" ");
         const artiLines = [];
         let curLine = "";
         for (const w of words) {
-          if ((curLine + " " + w).trim().length <= 34) {
+          if ((curLine + " " + w).trim().length <= 30) {
             curLine = (curLine + " " + w).trim();
           } else {
             if (curLine) artiLines.push(curLine);
@@ -437,11 +428,10 @@
         }
         if (curLine) artiLines.push(curLine);
 
-        let curArtiY = sy + 172;
-        for (const line of artiLines) {
-          ctx.fillText(line, 240, curArtiY);
-          curArtiY += 26;
-        }
+        const startArtiY = artiLines.length === 1 ? sy + 175 : sy + 165;
+        artiLines.forEach((line, idx) => {
+          ctx.fillText(line, 240, startArtiY + idx * 28);
+        });
 
         // Divider line between cards: 1px solid black line
         if (i < 2) {
@@ -481,9 +471,9 @@
       ctx.lineWidth = 1;
       ctx.stroke();
 
-      // Translation: Lato 20px
+      // Translation: Lato Bold 21px (crisp, not thin)
       ctx.textBaseline = "top";
-      ctx.font = "20px 'Lato', sans-serif";
+      ctx.font = "bold 21px 'Lato', sans-serif";
       const lines = [
         "“Hanya milik Allah asmaaul husna,",
         "maka bermohonlah kepada-Nya",
@@ -491,10 +481,10 @@
         "",
         "QS. Al-A'raf: 180"
       ];
-      let curY = 360;
+      let curY = 356;
       for (const l of lines) {
         if (l) ctx.fillText(l, 240, curY);
-        curY += 26;
+        curY += 28;
       }
 
       // Bottom notes
