@@ -6,6 +6,7 @@ import shutil
 from PIL import Image, ImageDraw, ImageFont
 import arabic_reshaper
 from bidi.algorithm import get_display
+import qrcode
 
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -22,7 +23,6 @@ amiri_path = "Amiri-Regular.ttf"
 win_fonts = 'C:\\Windows\\Fonts'
 
 # Reshapers
-# Custom reshaper for Amiri (Content & Penutup) with full harakat preserved
 harakat_reshaper = arabic_reshaper.ArabicReshaper(
     configuration={
         'delete_harakat': False,
@@ -30,7 +30,6 @@ harakat_reshaper = arabic_reshaper.ArabicReshaper(
     }
 )
 
-# Plain reshaper for Tahoma Bold cover title
 cover_reshaper = arabic_reshaper.ArabicReshaper(
     configuration={
         'delete_harakat': True,
@@ -39,20 +38,25 @@ cover_reshaper = arabic_reshaper.ArabicReshaper(
 )
 
 def render_content_arabic(text):
-    reshaped = harakat_reshaper.reshape(text)
-    return get_display(reshaped)
+    return get_display(harakat_reshaper.reshape(text))
 
 def render_cover_arabic(text):
-    reshaped = cover_reshaper.reshape(text)
-    return get_display(reshaped)
+    return get_display(cover_reshaper.reshape(text))
 
 # Fonts
-# Cover Fonts (Matching reference example exactly)
 f_cover_ar = ImageFont.truetype(os.path.join(win_fonts, "tahomabd.ttf"), 48)
 f_cover_title = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 34)
 f_cover_sub = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 22)
 f_cover_meta_bold = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 16)
 f_cover_meta = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 13)
+
+# Info page fonts
+f_info_head = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 22)
+f_info_sub = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 14)
+f_info_sec = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 14)
+f_info_bold = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 13)
+f_info_reg = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 12)
+f_info_url = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 12)
 
 # Content Fonts
 f_no = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 13)
@@ -84,41 +88,126 @@ def wrap_text(text, max_chars=36):
 def render_cover():
     img = Image.new("L", (width, height), 255)
     draw = ImageDraw.Draw(img)
-
-    right_x = 424  # Exact right boundary matching reference example
+    right_x = 424
 
     # 1. Arabic Title (Tahoma Bold, right-aligned to right_x, Y = 240)
-    ar_text = "الأسماء الحسنى"
-    ar_bidi = render_cover_arabic(ar_text)
+    ar_bidi = render_cover_arabic("الأسماء الحسنى")
     bb_ar = draw.textbbox((0, 0), ar_bidi, font=f_cover_ar)
-    w_ar = bb_ar[2] - bb_ar[0]
-    draw.text((right_x - w_ar, 240), ar_bidi, fill=0, font=f_cover_ar)
+    draw.text((right_x - (bb_ar[2] - bb_ar[0]), 240), ar_bidi, fill=0, font=f_cover_ar)
 
     # 2. Main Title: Asma'ul Husna (right-aligned, Y = 375)
     title = "Asma'ul Husna"
     bb_t = draw.textbbox((0, 0), title, font=f_cover_title)
-    w_t = bb_t[2] - bb_t[0]
-    draw.text((right_x - w_t, 375), title, fill=0, font=f_cover_title)
+    draw.text((right_x - (bb_t[2] - bb_t[0]), 375), title, fill=0, font=f_cover_title)
 
     # 3. Subtitle: 99 Nama-Nama Agung Allah (right-aligned, Y = 420)
     sub = "99 Nama-Nama Agung Allah"
     bb_s = draw.textbbox((0, 0), sub, font=f_cover_sub)
-    w_s = bb_s[2] - bb_s[0]
-    draw.text((right_x - w_s, 420), sub, fill=0, font=f_cover_sub)
+    draw.text((right_x - (bb_s[2] - bb_s[0]), 420), sub, fill=0, font=f_cover_sub)
 
-    # 4. Bottom Right-aligned Metadata block
+    # 4. Bottom Right-aligned Metadata block with user's info
     meta_lines = [
         ("99 Asma • Teks Arab, Latin & Arti", f_cover_meta_bold, 563),
-        ("Sumber Data: Asmaul Husna API", f_cover_meta, 594),
-        ("Repository: haikelz/asmaul-husna-api", f_cover_meta, 614),
-        ("Format XTC Khusus Perangkat Xteink X4", f_cover_meta, 635),
+        ("Edisi Khusus Xteink X4 & X4 Pro", f_cover_meta, 594),
+        ("Disusun oleh: fiqsr", f_cover_meta, 614),
+        ("github.com/fiqsr", f_cover_meta, 635),
         ("v 1.0 - 2026", f_cover_meta, 656),
     ]
 
     for line, fn, y_pos in meta_lines:
         bb = draw.textbbox((0, 0), line, font=fn)
+        draw.text((right_x - (bb[2] - bb[0]), y_pos), line, fill=0, font=fn)
+
+    return img
+
+def render_info_page():
+    img = Image.new("L", (width, height), 255)
+    draw = ImageDraw.Draw(img)
+
+    # Header
+    head = "Informasi & Sumber Proyek"
+    bb_h = draw.textbbox((0, 0), head, font=f_info_head)
+    draw.text(((width - (bb_h[2] - bb_h[0])) // 2, 40), head, fill=0, font=f_info_head)
+
+    sub = "Asma'ul Husna untuk Xteink X4 & X4 Pro"
+    bb_s = draw.textbbox((0, 0), sub, font=f_info_sub)
+    draw.text(((width - (bb_s[2] - bb_s[0])) // 2, 70), sub, fill=60, font=f_info_sub)
+
+    # Divider
+    draw.line([(32, 98), (width - 32, 98)], fill=120, width=1)
+
+    # Sources & Attributions Block
+    left_x = 42
+    cur_y = 115
+
+    sections = [
+        ("Penyusun & Repositori", [
+            ("Kompilasi & Desain:", "fiqsr (github.com/fiqsr)"),
+            ("Format Target:", "Xteink X4 & X4 Pro (480×800 E-Ink)"),
+        ]),
+        ("Sumber Data & Referensi", [
+            ("API Data:", "github.com/haikelz/asmaul-husna-api"),
+            ("Harakat & Tasykil:", "github.com/adiman-dev/islamic-json"),
+            ("Format & Arsitektur:", "github.com/andidewanto/xteink-x4-quran-indonesia"),
+            ("Font Teks Arab:", "Amiri Font (SIL Open Font License)"),
+        ])
+    ]
+
+    for sec_title, sec_items in sections:
+        draw.text((left_x, cur_y), sec_title, fill=0, font=f_info_sec)
+        cur_y += 22
+        for lbl, val in sec_items:
+            draw.text((left_x + 8, cur_y), lbl, fill=0, font=f_info_bold)
+            bb_lbl = draw.textbbox((0, 0), lbl, font=f_info_bold)
+            w_lbl = bb_lbl[2] - bb_lbl[0]
+            draw.text((left_x + 8 + w_lbl + 8, cur_y + 1), val, fill=40, font=f_info_reg)
+            cur_y += 19
+        cur_y += 10
+
+    # Divider before QR Code
+    draw.line([(32, cur_y + 4), (width - 32, cur_y + 4)], fill=160, width=1)
+    cur_y += 18
+
+    # QR Code generation
+    repo_url = "https://github.com/fiqsr/Asmaul-Husna-XTEINK-X4-X4-PRO"
+    qr = qrcode.QRCode(
+        version=1,
+        box_size=5,
+        border=2,
+        error_correction=qrcode.constants.ERROR_CORRECT_M
+    )
+    qr.add_data(repo_url)
+    qr.make(fit=True)
+    qr_img = qr.make_image(fill_color="black", back_color="white").convert("L")
+    
+    qr_size = 190
+    qr_img = qr_img.resize((qr_size, qr_size), Image.NEAREST)
+    qr_x = (width - qr_size) // 2
+    qr_y = cur_y
+    img.paste(qr_img, (qr_x, qr_y))
+
+    # Border around QR Code
+    draw.rectangle([(qr_x - 3, qr_y - 3), (qr_x + qr_size + 2, qr_y + qr_size + 2)], outline=180, width=1)
+
+    cur_y += qr_size + 14
+
+    # QR Code instruction / label
+    qr_labels = [
+        "Pindai QR code di atas untuk membuka repositori:",
+        "github.com/fiqsr/Asmaul-Husna-XTEINK-X4-X4-PRO",
+        "Dapatkan rilis .XTC & .EPUB terbaru atau bagikan proyek ini",
+    ]
+    for i, lbl in enumerate(qr_labels):
+        fn = f_info_url if i == 1 else f_info_reg
+        bb = draw.textbbox((0, 0), lbl, font=fn)
         w = bb[2] - bb[0]
-        draw.text((right_x - w, y_pos), line, fill=0, font=fn)
+        draw.text(((width - w) // 2, cur_y), lbl, fill=0 if i == 1 else 60, font=fn)
+        cur_y += 18
+
+    # Bottom footer
+    ft = "Semoga Bermanfaat • 2026"
+    bb_f = draw.textbbox((0, 0), ft, font=f_info_sub)
+    draw.text(((width - (bb_f[2] - bb_f[0])) // 2, 762), ft, fill=80, font=f_info_sub)
 
     return img
 
@@ -205,8 +294,8 @@ def render_penutup():
     # Bottom notes
     cur_y = 650
     notes = [
-        "Asma'ul Husna untuk Xteink X4",
-        "API: haikelz/asmaul-husna-api",
+        "Asma'ul Husna untuk Xteink X4 & X4 Pro",
+        "Disusun oleh fiqsr • github.com/fiqsr",
         "Format Project: andidewanto/xteink-x4-quran-indonesia",
         "Selesai Dibaca • 99 Asma"
     ]
@@ -264,29 +353,34 @@ def build_xtc(xtg_blobs):
 # Main Generation
 all_pages = []
 
-print("Rendering Rata Kanan Cover...")
+print("1. Rendering Rata Kanan Cover...")
 cover_img = render_cover()
 all_pages.append(cover_img)
 
+print("2. Rendering Info & QR Code Page...")
+info_img = render_info_page()
+all_pages.append(info_img)
+
+print("3. Rendering 33 Content Pages (Fixed Grid)...")
 for p_idx in range(0, 99, 3):
     chunk = items[p_idx:p_idx+3]
     page_num = (p_idx // 3) + 1
     p_img = render_content_page(chunk, page_num)
     all_pages.append(p_img)
 
-print("Rendering Penutup...")
+print("4. Rendering Penutup...")
 penutup_img = render_penutup()
 all_pages.append(penutup_img)
 
-print(f"Total pages rendered: {len(all_pages)}")
+print(f"Total pages rendered: {len(all_pages)} (Expected 36)")
 
 # Save preview images
 preview_dir = "docs/preview"
 os.makedirs(preview_dir, exist_ok=True)
 cover_img.save(os.path.join(preview_dir, "00-sampul.png"))
-all_pages[1].save(os.path.join(preview_dir, "01-halaman.png"))
-all_pages[4].save(os.path.join(preview_dir, "02-halaman.png")) # Page 4 (Items 10-12)
-all_pages[25].save(os.path.join(preview_dir, "03-halaman-73-75.png")) # Page 25 (Items 73-75)
+info_img.save(os.path.join(preview_dir, "01-informasi.png"))
+all_pages[2].save(os.path.join(preview_dir, "02-halaman-01.png")) # Page 1 of Asma (items 1-3)
+all_pages[26].save(os.path.join(preview_dir, "03-halaman-73-75.png")) # Page 25 of Asma (items 73-75)
 penutup_img.save(os.path.join(preview_dir, "04-penutup.png"))
 print("Preview images saved.")
 

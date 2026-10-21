@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Generator Asma'ul Husna untuk Xteink X4</title>
+  <title>Generator Asma'ul Husna untuk Xteink X4 &amp; X4 Pro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -139,8 +139,8 @@
 <body>
   <header class="app-bar">
     <div>
-      <h1>Generator Asma'ul Husna untuk Xteink X4</h1>
-      <p>Simetris • Lengkap Harakat • Font Amiri • 480x800 E-Ink</p>
+      <h1>Generator Asma'ul Husna untuk Xteink X4 &amp; X4 Pro</h1>
+      <p>Simetris • Lengkap Harakat • Font Amiri • 480x800 E-Ink • by fiqsr</p>
     </div>
     <button id="btnExport" class="btn export-btn">EXPORT .XTC</button>
   </header>
@@ -150,14 +150,14 @@
       <div class="search-wrap">
         <input type="search" id="searchInput" placeholder="Cari nama Latin atau Arab..." />
       </div>
-      <div class="validasi">Lengkap • 99 Asma'ul Husna Berharakat • 35 Halaman</div>
+      <div class="validasi">Lengkap • 99 Asma'ul Husna • 36 Halaman</div>
       <ul class="asma-list" id="asmaList"></ul>
     </div>
 
     <div class="pane-preview">
       <div class="toolbar">
         <button id="btnPrev" class="btn">&#8592; Prev</button>
-        <span id="pageIndicator" style="font-weight: 500; font-size: 0.95rem;">Halaman 1 / 35</span>
+        <span id="pageIndicator" style="font-weight: 500; font-size: 0.95rem;">Halaman 1 / 36</span>
         <button id="btnNext" class="btn">Next &#8594;</button>
       </div>
 
@@ -169,10 +169,14 @@
 
   <script>
     const EMBEDDED_ITEMS = [{"urutan": 1, "latin": "Ar Rahman", "arab": "الرَّحْمَنُ", "arti": "Yang Maha Pengasih"}, {"urutan": 2, "latin": "Ar Rahiim", "arab": "الرَّحِيمُ", "arti": "Yang Maha Penyayang"}, {"urutan": 3, "latin": "Al Malik", "arab": "الْمَلِكُ", "arti": "Yang Maha Merajai / Memerintah"}, {"urutan": 4, "latin": "Al Quddus", "arab": "الْقُدُّوسُ", "arti": "Yang Maha Suci"}, {"urutan": 5, "latin": "As Salaam", "arab": "السَّلاَمُ", "arti": "Yang Maha Memberi Kesejahteraan"}, {"urutan": 6, "latin": "Al Mu 'min", "arab": "الْمُؤْمِنُ", "arti": "Yang Maha Memberi Keamanan"}, {"urutan": 7, "latin": "Al Muhaimin", "arab": "الْمُهَيْمِنُ", "arti": "Yang Maha Pemelihara"}, {"urutan": 8, "latin": "Al 'Aziiz", "arab": "الْعَزِيزُ", "arti": "Yang Maha Perkasa"}, {"urutan": 9, "latin": "Al Jabbar", "arab": "الْجَبَّارُ", "arti": "Yang Memiliki Mutlak Kegagahan"}, {"urutan": 10, "latin": "Al Mutakabbir", "arab": "الْمُتَكَبِّرُ", "arti": "Yang Maha Megah, Yang Memiliki Kebesaran"}, {"urutan": 11, "latin": "Al Khaliq", "arab": "الْخَالِقُ", "arti": "Yang Maha Pencipta"}, {"urutan": 12, "latin": "Al Baari '", "arab": "الْبَارِئُ", "arti": "Yang Maha Melepaskan (Membuat, Membentuk, Menyeimbangkan)"}, {"urutan": 13, "latin": "Al Mushawwir", "arab": "الْمُصَوِّرُ", "arti": "Yang Maha Membentuk Rupa(makhluknya)"}, {"urutan": 14, "latin": "Al Ghaffaar", "arab": "الْغَفَّارُ", "arti": "Yang Maha Pengampun"}, {"urutan": 15, "latin": "Al Qahhaar", "arab": "الْقَهَّارُ", "arti": "Yang Maha Memaksa"}, {"urutan": 16, "latin": "Al Wahhaab", "arab": "الْوَهَّابُ", "arti": "Yang Maha Pemberi Karunia"}, {"urutan": 17, "latin": "Ar Razzaaq", "arab": "الرَّزَّاقُ", "arti": "Yang Maha Pemberi Rezeki"}, {"urutan": 18, "latin": "Al Fattaah", "arab": "الْفَتَّاحُ", "arti": "Yang Maha Pembuka Rahmat"}, {"urutan": 19, "latin": "Al 'Aliim", "arab": "اَلْعَلِيْمُ", "arti": "Yang Maha Mengetahui(Memiliki Ilmu)"}, {"urutan": 20, "latin": "Al Qaabidh", "arab": "الْقَابِضُ", "arti": "Yang Maha Menyempitkan(makhluknya)"}, {"urutan": 21, "latin": "Al Baasith", "arab": "الْبَاسِطُ", "arti": "Yang Maha Melapangkan(makhluknya)"}, {"urutan": 22, "latin": "Al Khaafidh", "arab": "الْخَافِضُ", "arti": "Yang Maha Merendahkan(makhluknya)"}, {"urutan": 23, "latin": "Ar Raafi '", "arab": "الرَّافِعُ", "arti": "Yang Maha Meninggikan(makhluknya)"}, {"urutan": 24, "latin": "Al Mu'izz", "arab": "الْمُعِزُّ", "arti": "Yang Maha Memuliakan(makhluknya)"}, {"urutan": 25, "latin": "Al Mudzil", "arab": "المُذِلُّ", "arti": "Yang Maha Menghinakan(makhluknya)"}, {"urutan": 26, "latin": "Al Samii '", "arab": "السَّمِيعُ", "arti": "Yang Maha Mendengar"}, {"urutan": 27, "latin": "Al Bashiir", "arab": "الْبَصِيرُ", "arti": "Yang Maha Melihat"}, {"urutan": 28, "latin": "Al Hakam", "arab": "الْحَكَمُ", "arti": "Yang Maha Menetapkan"}, {"urutan": 29, "latin": "Al 'Adl", "arab": "الْعَدْلُ", "arti": "Yang Maha Adil"}, {"urutan": 30, "latin": "Al Lathiif", "arab": "اللَّطِيفُ", "arti": "Yang Maha Lembut"}, {"urutan": 31, "latin": "Al Khabiir", "arab": "الْخَبِيرُ", "arti": "Yang Maha Mengenal"}, {"urutan": 32, "latin": "Al Haliim", "arab": "الْحَلِيمُ", "arti": "Yang Maha Penyantun"}, {"urutan": 33, "latin": "Al 'Azhiim", "arab": "الْعَظِيمُ", "arti": "Yang Maha Agung"}, {"urutan": 34, "latin": "Al Ghafuur", "arab": "الْغَفُورُ", "arti": "Yang Maha Pengampun"}, {"urutan": 35, "latin": "As Syakuur", "arab": "الشَّكُورُ", "arti": "Yang Maha Pembalas Budi(Menghargai)"}, {"urutan": 36, "latin": "Al 'Aliy", "arab": "الْعَلِيُّ", "arti": "Yang Maha Tinggi"}, {"urutan": 37, "latin": "Al Kabiir", "arab": "الْكَبِيرُ", "arti": "Yang Maha Besar"}, {"urutan": 38, "latin": "Al Hafizh", "arab": "الْحَفِيظُ", "arti": "Yang Maha Memelihara"}, {"urutan": 39, "latin": "Al Muqiit", "arab": "المُقيِت", "arti": "Yang Maha Pemberi Kecukupan"}, {"urutan": 40, "latin": "Al Hasiib", "arab": "الْحسِيبُ", "arti": "Yang Maha Membuat Perhitungan"}, {"urutan": 41, "latin": "Al Jaliil", "arab": "الْجَلِيلُ", "arti": "Yang Maha Mulia"}, {"urutan": 42, "latin": "Al Kariim", "arab": "الْكَرِيمُ", "arti": "Yang Maha Mulia"}, {"urutan": 43, "latin": "Ar Raqiib", "arab": "الرَّقِيبُ", "arti": "Yang Maha Mengawasi"}, {"urutan": 44, "latin": "Al Mujiib", "arab": "الْمُجِيبُ", "arti": "Yang Maha Mengabulkan"}, {"urutan": 45, "latin": "Al Waasi '", "arab": "الْوَاسِعُ", "arti": "Yang Maha Luas"}, {"urutan": 46, "latin": "Al Hakiim", "arab": "الْحَكِيمُ", "arti": "Yang Maha Maka Bijaksana"}, {"urutan": 47, "latin": "Al Waduud", "arab": "الْوَدُودُ", "arti": "Yang Maha Mengasihi"}, {"urutan": 48, "latin": "Al Majiid", "arab": "الْمَجِيدُ", "arti": "Yang Maha Mulia"}, {"urutan": 49, "latin": "Al Baa'its", "arab": "الْبَاعِثُ", "arti": "Yang Maha Membangkitkan"}, {"urutan": 50, "latin": "As Syahiid", "arab": "الشَّهِيدُ", "arti": "Yang Maha Menyaksikan"}, {"urutan": 51, "latin": "Al Haqq", "arab": "الْحَقُّ", "arti": "Yang Maha Benar"}, {"urutan": 52, "latin": "Al Wakiil", "arab": "الْوَكِيلُ", "arti": "Yang Maha Memelihara"}, {"urutan": 53, "latin": "Al Qawiyyu", "arab": "الْقَوِيُّ", "arti": "Yang Maha Kuat"}, {"urutan": 54, "latin": "Al Matiin", "arab": "الْمَتِينُ", "arti": "Yang Maha Kokoh"}, {"urutan": 55, "latin": "Al Waliyy", "arab": "الْوَلِيُّ", "arti": "Yang Maha Melindungi"}, {"urutan": 56, "latin": "Al Hamiid", "arab": "الْحَمِيدُ", "arti": "Yang Maha Terpuji"}, {"urutan": 57, "latin": "Al Muhshii", "arab": "الْمُحْصِي", "arti": "Yang Maha Mengalkulasi(Menghitung Segala Sesuatu)"}, {"urutan": 58, "latin": "Al Mubdi '", "arab": "الْمُبْدِئُ", "arti": "Yang Maha Memulai"}, {"urutan": 59, "latin": "Al Mu'iid", "arab": "الْمُعِيدُ", "arti": "Yang Maha Mengembalikan Kehidupan"}, {"urutan": 60, "latin": "Al Muhyii", "arab": "الْمُحْيِي", "arti": "Yang Maha Menghidupkan"}, {"urutan": 61, "latin": "Al Mumiitu", "arab": "اَلْمُمِيتُ", "arti": "Yang Maha Mematikan"}, {"urutan": 62, "latin": "Al Hayyu", "arab": "الْحَيُّ", "arti": "Yang Maha Hidup"}, {"urutan": 63, "latin": "Al Qayyuum", "arab": "الْقَيُّومُ", "arti": "Yang Maha Mandiri"}, {"urutan": 64, "latin": "Al Waajid", "arab": "الْوَاجِدُ", "arti": "Yang Maha Penemu"}, {"urutan": 65, "latin": "Al Maajid", "arab": "الْمَاجِدُ", "arti": "Yang Maha Mulia"}, {"urutan": 66, "latin": "Al Wahiid", "arab": "الْواحِدُ", "arti": "Yang Maha Tunggal"}, {"urutan": 67, "latin": "Al Ahad", "arab": "اَلاَحَدُ", "arti": "Yang Maha Esa"}, {"urutan": 68, "latin": "As Shamad", "arab": "الصَّمَدُ", "arti": "Yang Maha Dibutuhkan, Tempat Meminta"}, {"urutan": 69, "latin": "Al Qaadir", "arab": "الْقَادِرُ", "arti": "Yang Maha Menentukan, Maha Menyeimbangkan"}, {"urutan": 70, "latin": "Al Muqtadir", "arab": "الْمُقْتَدِرُ", "arti": "Yang Maha Berkuasa"}, {"urutan": 71, "latin": "Al Muqaddim", "arab": "الْمُقَدِّمُ", "arti": "Yang Maha Mendahulukan"}, {"urutan": 72, "latin": "Al Mu 'akkhir", "arab": "الْمُؤَخِّرُ", "arti": "Yang Maha Mengakhirkan"}, {"urutan": 73, "latin": "Al Awwal", "arab": "الأوَّلُ", "arti": "Yang Maha Awal"}, {"urutan": 74, "latin": "Al Aakhir", "arab": "الآخِرُ", "arti": "Yang Maha Akhir"}, {"urutan": 75, "latin": "Az Zhaahir", "arab": "الظَّاهِرُ", "arti": "Yang Maha Nyata"}, {"urutan": 76, "latin": "Al Baathin", "arab": "الْبَاطِنُ", "arti": "Yang Maha Ghaib"}, {"urutan": 77, "latin": "Al Waali", "arab": "الْوَالِي", "arti": "Yang Maha Memerintah"}, {"urutan": 78, "latin": "Al Muta'aalii", "arab": "الْمُتَعَالِي", "arti": "Yang Maha Tinggi"}, {"urutan": 79, "latin": "Al Barru", "arab": "الْبَرُّ", "arti": "Yang Maha Penderma(Maha Pemberi Kebajikan)"}, {"urutan": 80, "latin": "At Tawwaab", "arab": "التَّوَّابُ", "arti": "Yang Maha Penerima Tobat"}, {"urutan": 81, "latin": "Al Muntaqim", "arab": "الْمُنْتَقِمُ", "arti": "Yang Maha Pemberi Balasan"}, {"urutan": 82, "latin": "Al Afuww", "arab": "العَفُوُّ", "arti": "Yang Maha Pemaaf"}, {"urutan": 83, "latin": "Ar Ra 'uuf", "arab": "الرَّؤُوفُ", "arti": "Yang Maha Pengasuh"}, {"urutan": 84, "latin": "Malikul Mulk", "arab": "مَالِكُ الْمُلْكِ", "arti": "Yang Maha Penguasa Kerajaan(Semesta)"}, {"urutan": 85, "latin": "Dzul Jalaali Wal Ikraam", "arab": "ذُوالْجَلاَلِ وَالإكْرَامِ", "arti": "Yang Maha Pemilik Kebesaran dan Kemuliaan"}, {"urutan": 86, "latin": "Al Muqsith", "arab": "الْمُقْسِطُ", "arti": "Yang Maha Pemberi Keadilan"}, {"urutan": 87, "latin": "Al Jamii'", "arab": "الْجَامِعُ", "arti": "Yang Maha Mengumpulkan"}, {"urutan": 88, "latin": "Al Ghaniyy", "arab": "الْغَنِيُّ", "arti": "Yang Maha Kaya"}, {"urutan": 89, "latin": "Al Mughnii", "arab": "الْمُغْنِي", "arti": "Yang Maha Pemberi Kekayaan"}, {"urutan": 90, "latin": "Al Maani", "arab": "اَلْمَانِعُ", "arti": "Yang Maha Mencegah"}, {"urutan": 91, "latin": "Ad Dhaar", "arab": "الضَّارَّ", "arti": "Yang Maha Penimpa Kemudharatan"}, {"urutan": 92, "latin": "An Nafii '", "arab": "النَّافِعُ", "arti": "Yang Maha Memberi Manfaat"}, {"urutan": 93, "latin": "An Nuur", "arab": "النُّورُ", "arti": "Yang Maha Bercahaya(Menerangi, Memberi Cahaya)"}, {"urutan": 94, "latin": "Al Haadii", "arab": "الْهَادِي", "arti": "Yang Maha Pemberi Petunjuk"}, {"urutan": 95, "latin": "Al Badii'", "arab": "الْبَدِيعُ", "arti": "Yang Maha Pencipta Yang Tiada Bandingannya"}, {"urutan": 96, "latin": "Al Baaqii", "arab": "اَلْبَاقِي", "arti": "Yang Maha Kekal"}, {"urutan": 97, "latin": "Al Waarits", "arab": "الْوَارِثُ", "arti": "Yang Maha Pewaris"}, {"urutan": 98, "latin": "Ar Rasyiid", "arab": "الرَّشِيدُ", "arti": "Yang Maha Pandai"}, {"urutan": 99, "latin": "As Shabuur", "arab": "الصَّبُورُ", "arti": "Yang Maha Sabar"}];
+    const QR_CODE_DATA_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAADjUlEQVR4nO3dy4rlOBBF0a2N//+X1YOeuBESYTuTLk7UGiS3/JAFAUFYD9eYJJNoEk2iSTSJJtEkmkSTaBJNol33f4zybXO5fh7buV+/u3I9Pj/0rUX0JJpEk2jSJ3P+6/z+fs6KT1tbz45j/nzaN4km0SSaRJNumfOcIdcju7qx4pwbx4e+tYieRJNoEk16Zs6KNYOtWbTyll3PhE9JNIkm0SSaRLu+3Fwfh9yNYZ7f1r/nT4km0SSaRJOemXOWm9jVmeNhFt1VsLtRgorw6Ek0iSbRpFvmHOWbz3lvPb5ev/t9fmKdRJNoEk2iSbTx5Y343fjkrkb9jTX5Ek2iSTSJJn0y5zjOmNfz5NN6sn623tsW0ZNoEk2iSedxznH7ux6nkFFnuf3zSvjd8UHj6Ek0iSbRpE/mnIW36cr+oN3veptfMnmj6Ek0iSbRpNvuy3n7fc6B5/WcX0ZBz/VnffRAokk0iSbRpGfNOW+/7+oV6bsZn3d7OefSkxbRk2gSTaJJtGt3ojJf825O537Nen2lP7M8LirRJJpEk2jSeW593n6/+2JSfbXn2sJ/OnrsQ9PoSTSJJtEk2ng39rg7XlnXVNlx+VProySaRJNoEk06f59zbs6e96GfZ5p2z1pbO5vHdlpET6JJNIkm0a7KRef1RU/rz0qFWf/C0tw8vUX0JJpEk2gS7apcVH8HP1eM55n381t5/c29UfQkmkSTaBLt4tX6HwpVaKXNnx35HEtr4dGTaBJNokm3ufW7+sz4u/qzMo66M45PbxE9iSbRJJr0/H+Ixu1vpf5c762/oder1t1sVNPoSTSJJtGk2x4iHo5VVmbD1yvruzgrRs/oSTSJJtGk55eN5+bI72W8c95+usKzRfQkmkSTaNJzD9FdfQ9R/SwPn3W+d2xaC4+eRJNoEk2ijfnl5s3xyv7Nym6g+sx70+hJNIkm0aTzHiI+zA3V530ojwPU1+G3iJ5Ek2gSTXrOre+cq8en352r7xt6V3lKNIkm0SSaRLt2Jypf1aivINodr+xnr3/vbnaLnkSTaBJNol1fbq7nvXffWXo3wz77RE+iSTSJJtGu337Au1X084dqYIkm0SSaRJNo1+7E0zmd89lzLVr/ztJ69u5vzZlFokk06bkSvqKyF/LLnvf72V2bY+lDo+hJNIkm0STa+LKe888n0SSaRJNoEk2iSTSJJtEkmv93B37XPxvj/dojs4eYAAAAAElFTkSuQmCC";
+
+    const qrImage = new Image();
+    qrImage.src = QR_CODE_DATA_URL;
 
     let asmaData = EMBEDDED_ITEMS;
     let currentPage = 0;
-    const totalPages = 35;
+    const totalPages = 36;
 
     const canvas = document.getElementById("stage");
     const ctx = canvas.getContext("2d");
@@ -193,11 +197,22 @@
       };
       listEl.appendChild(liCover);
 
+      // Item 1: Info & QR
+      const liInfo = document.createElement("li");
+      liInfo.className = "asma-item" + (currentPage === 1 ? " active" : "");
+      liInfo.innerHTML = '<span class="urutan">01</span><span class="latin">Informasi &amp; Sumber Proyek</span><span class="arab">QR</span>';
+      liInfo.onclick = () => {
+        currentPage = 1;
+        renderList();
+        renderPage(1);
+      };
+      listEl.appendChild(liInfo);
+
       asmaData.forEach((item) => {
         if (search && !item.latin.toLowerCase().includes(search) && !item.arti.toLowerCase().includes(search) && !item.arab.includes(search)) {
           return;
         }
-        const itemPage = Math.floor((item.urutan - 1) / 3) + 1;
+        const itemPage = Math.floor((item.urutan - 1) / 3) + 2;
         const li = document.createElement("li");
         li.className = "asma-item" + (currentPage === itemPage ? " active" : "");
         li.innerHTML = `<span class="urutan">${item.urutan}</span><span class="latin">${item.latin}</span><span class="arab">${item.arab}</span>`;
@@ -209,14 +224,14 @@
         listEl.appendChild(li);
       });
 
-      // Item Penutup
+      // Item Penutup (Page 35)
       const liPenutup = document.createElement("li");
-      liPenutup.className = "asma-item" + (currentPage === 34 ? " active" : "");
-      liPenutup.innerHTML = '<span class="urutan">35</span><span class="latin">Penutup (QS. Al-A\'raf: 180)</span><span class="arab">وَلِلَّهِ</span>';
+      liPenutup.className = "asma-item" + (currentPage === 35 ? " active" : "");
+      liPenutup.innerHTML = '<span class="urutan">36</span><span class="latin">Penutup (QS. Al-A\'raf: 180)</span><span class="arab">وَلِلَّهِ</span>';
       liPenutup.onclick = () => {
-        currentPage = 34;
+        currentPage = 35;
         renderList();
-        renderPage(34);
+        renderPage(35);
       };
       listEl.appendChild(liPenutup);
     }
@@ -235,7 +250,9 @@
 
       if (pageNum === 0) {
         renderCover();
-      } else if (pageNum === 34) {
+      } else if (pageNum === 1) {
+        renderInfoPage();
+      } else if (pageNum === 35) {
         renderPenutup();
       } else {
         renderContent(pageNum);
@@ -260,19 +277,125 @@
       ctx.font = "22px 'Segoe UI', Roboto, sans-serif";
       ctx.fillText("99 Nama-Nama Agung Allah", rightX, 420);
 
-      // 4. Metadata block: right-aligned, Y = 563+
+      // 4. Metadata block with fiqsr info: right-aligned, Y = 563+
       ctx.font = "bold 16px 'Segoe UI', Roboto, sans-serif";
       ctx.fillText("99 Asma • Teks Arab, Latin & Arti", rightX, 563);
 
       ctx.font = "13px 'Segoe UI', Roboto, sans-serif";
-      ctx.fillText("Sumber Data: Asmaul Husna API", rightX, 594);
-      ctx.fillText("Repository: haikelz/asmaul-husna-api", rightX, 614);
-      ctx.fillText("Format XTC Khusus Perangkat Xteink X4", rightX, 635);
+      ctx.fillText("Edisi Khusus Xteink X4 & X4 Pro", rightX, 594);
+      ctx.fillText("Disusun oleh: fiqsr", rightX, 614);
+      ctx.fillText("github.com/fiqsr", rightX, 635);
       ctx.fillText("v 1.0 - 2026", rightX, 656);
     }
 
+    function renderInfoPage() {
+      ctx.textBaseline = "top";
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#000000";
+
+      // Title
+      ctx.font = "bold 22px 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("Informasi & Sumber Proyek", 240, 40);
+
+      ctx.font = "14px 'Segoe UI', Roboto, sans-serif";
+      ctx.fillStyle = "#444444";
+      ctx.fillText("Asma'ul Husna untuk Xteink X4 & X4 Pro", 240, 70);
+
+      // Divider
+      ctx.beginPath();
+      ctx.moveTo(32, 98);
+      ctx.lineTo(480 - 32, 98);
+      ctx.strokeStyle = "#888888";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Info text
+      const leftX = 42;
+      let curY = 115;
+
+      function drawSection(title, list) {
+        ctx.textAlign = "left";
+        ctx.fillStyle = "#000000";
+        ctx.font = "bold 14px 'Segoe UI', Roboto, sans-serif";
+        ctx.fillText(title, leftX, curY);
+        curY += 22;
+
+        for (const [lbl, val] of list) {
+          ctx.font = "bold 13px 'Segoe UI', Roboto, sans-serif";
+          ctx.fillStyle = "#000000";
+          ctx.fillText(lbl, leftX + 8, curY);
+          const wLbl = ctx.measureText(lbl).width;
+
+          ctx.font = "12px 'Segoe UI', Roboto, sans-serif";
+          ctx.fillStyle = "#333333";
+          ctx.fillText(val, leftX + 8 + wLbl + 8, curY + 1);
+          curY += 19;
+        }
+        curY += 10;
+      }
+
+      drawSection("Penyusun & Repositori", [
+        ["Kompilasi & Desain:", "fiqsr (github.com/fiqsr)"],
+        ["Format Target:", "Xteink X4 & X4 Pro (480×800 E-Ink)"]
+      ]);
+
+      drawSection("Sumber Data & Referensi", [
+        ["API Data:", "github.com/haikelz/asmaul-husna-api"],
+        ["Harakat & Tasykil:", "github.com/adiman-dev/islamic-json"],
+        ["Format & Arsitektur:", "github.com/andidewanto/xteink-x4-quran-indonesia"],
+        ["Font Teks Arab:", "Amiri Font (SIL Open Font License)"]
+      ]);
+
+      // Divider
+      ctx.beginPath();
+      ctx.moveTo(32, curY + 4);
+      ctx.lineTo(480 - 32, curY + 4);
+      ctx.strokeStyle = "#aaaaaa";
+      ctx.stroke();
+      curY += 18;
+
+      // QR Code
+      const qrSize = 190;
+      const qrX = (480 - qrSize) / 2;
+      const qrY = curY;
+      if (qrImage.complete) {
+        ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
+      } else {
+        qrImage.onload = () => {
+          if (currentPage === 1) renderInfoPage();
+        };
+      }
+
+      ctx.strokeStyle = "#cccccc";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(qrX - 3, qrY - 3, qrSize + 6, qrSize + 6);
+
+      curY += qrSize + 14;
+
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#444444";
+      ctx.font = "12px 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("Pindai QR code di atas untuk membuka repositori:", 240, curY);
+      curY += 18;
+
+      ctx.font = "bold 12px 'Segoe UI', Roboto, sans-serif";
+      ctx.fillStyle = "#000000";
+      ctx.fillText("github.com/fiqsr/Asmaul-Husna-XTEINK-X4-X4-PRO", 240, curY);
+      curY += 18;
+
+      ctx.font = "12px 'Segoe UI', Roboto, sans-serif";
+      ctx.fillStyle = "#444444";
+      ctx.fillText("Dapatkan rilis .XTC & .EPUB terbaru atau bagikan proyek ini", 240, curY);
+
+      // Bottom footer
+      ctx.font = "14px 'Segoe UI', Roboto, sans-serif";
+      ctx.fillStyle = "#555555";
+      ctx.fillText("Semoga Bermanfaat • 2026", 240, 762);
+    }
+
     function renderContent(pageNum) {
-      const startIdx = (pageNum - 1) * 3;
+      const asmaPageNum = pageNum - 1; // Page 2 is Asma 1-3 (page_num 1)
+      const startIdx = (asmaPageNum - 1) * 3;
       const chunk = asmaData.slice(startIdx, startIdx + 3);
       const slotTops = [16, 260, 504];
       const slotH = 244;
@@ -338,7 +461,7 @@
       ctx.textAlign = "center";
       ctx.font = "bold 16px 'Segoe UI', Roboto, sans-serif";
       ctx.fillStyle = "#000000";
-      ctx.fillText(String(pageNum), 240, 764);
+      ctx.fillText(String(asmaPageNum), 240, 764);
     }
 
     function renderPenutup() {
@@ -380,8 +503,8 @@
       ctx.font = "13px 'Segoe UI', Roboto, sans-serif";
       ctx.fillStyle = "#555555";
       const notes = [
-        "Asma'ul Husna untuk Xteink X4",
-        "API: haikelz/asmaul-husna-api",
+        "Asma'ul Husna untuk Xteink X4 & X4 Pro",
+        "Disusun oleh fiqsr • github.com/fiqsr",
         "Format Project: andidewanto/xteink-x4-quran-indonesia",
         "Selesai Dibaca • 99 Asma"
       ];
@@ -407,7 +530,6 @@
       }
     };
 
-    // Keyboard navigation (ArrowLeft & ArrowRight)
     window.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft" && currentPage > 0) {
         currentPage--;
@@ -502,7 +624,6 @@
       btn.disabled = false;
       btn.textContent = originalText;
       currentPage = origPage;
-      renderList();
       renderPage(currentPage);
     };
 
