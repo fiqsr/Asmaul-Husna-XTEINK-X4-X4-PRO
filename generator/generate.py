@@ -2,35 +2,38 @@ import os
 import sys
 import json
 import struct
+import shutil
 from PIL import Image, ImageDraw, ImageFont
 import arabic_reshaper
 from bidi.algorithm import get_display
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-# 1. Load data
-with open('asmaul_husna.json', 'r', encoding='utf-8') as f:
+# 1. Load full harakat dataset
+with open('asmaul_husna_full_harakat.json', 'r', encoding='utf-8') as f:
     items = json.load(f)
+
+# Save to asmaul_husna.json as well
+with open('asmaul_husna.json', 'w', encoding='utf-8') as f:
+    json.dump(items, f, ensure_ascii=False, indent=2)
 
 width, height = 480, 800
 amiri_path = "Amiri-Regular.ttf"
 win_fonts = 'C:\\Windows\\Fonts'
 
-# Cover fonts
-f_cover_ar = ImageFont.truetype(amiri_path, 54)
+# Fonts
+f_cover_ar = ImageFont.truetype(amiri_path, 56)
 f_cover_title = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 34)
 f_cover_sub = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 20)
 f_cover_meta = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 15)
 f_cover_sumber = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 13)
 
-# Content fonts (Amiri for Arabic!)
-f_item_ar = ImageFont.truetype(amiri_path, 50)
-f_item_no = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 14)
-f_item_latin = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 24)
-f_item_arti = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 19)
+f_no = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 13)
+f_ar = ImageFont.truetype(amiri_path, 48)
+f_latin = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 23)
+f_arti = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 17)
 f_page_num = ImageFont.truetype(os.path.join(win_fonts, "segoeuib.ttf"), 17)
 
-# Penutup fonts
 f_penutup_ar = ImageFont.truetype(amiri_path, 38)
 f_penutup_arti = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 16)
 f_penutup_meta = ImageFont.truetype(os.path.join(win_fonts, "segoeui.ttf"), 13)
@@ -39,23 +42,38 @@ def render_arabic(text, font):
     reshaped = arabic_reshaper.reshape(text)
     return get_display(reshaped)
 
+def wrap_text(text, max_chars=38):
+    words = text.split()
+    lines = []
+    cur = ""
+    for w in words:
+        if len(cur + " " + w) <= max_chars:
+            cur = (cur + " " + w).strip()
+        else:
+            if cur:
+                lines.append(cur)
+            cur = w
+    if cur:
+        lines.append(cur)
+    return lines
+
 def render_cover():
     img = Image.new("L", (width, height), 255)
     draw = ImageDraw.Draw(img)
 
-    # 1. Arabic: الأسماء الحسنى (Centered horizontally, Y = 220)
-    ar_bidi = render_arabic("الأسماء الحسنى", f_cover_ar)
+    # 1. Arabic Title with full harakat: الْأَسْمَاءُ الْحُسْنَىٰ (Centered horizontally, Y = 220)
+    ar_bidi = render_arabic("الْأَسْمَاءُ الْحُسْنَىٰ", f_cover_ar)
     bb_ar = draw.textbbox((0, 0), ar_bidi, font=f_cover_ar)
     w_ar = bb_ar[2] - bb_ar[0]
     draw.text(((width - w_ar) // 2, 220), ar_bidi, fill=0, font=f_cover_ar)
 
-    # 2. Main Title: Asma'ul Husna (Centered horizontally, Y = 360)
+    # 2. Main Title: Asma'ul Husna (Centered, Y = 360)
     title = "Asma'ul Husna"
     bb_t = draw.textbbox((0, 0), title, font=f_cover_title)
     w_t = bb_t[2] - bb_t[0]
     draw.text(((width - w_t) // 2, 360), title, fill=0, font=f_cover_title)
 
-    # 3. Subtitle: 99 Nama-Nama Agung Allah (Centered horizontally, Y = 405)
+    # 3. Subtitle: 99 Nama-Nama Agung Allah (Centered, Y = 405)
     sub = "99 Nama-Nama Agung Allah"
     bb_s = draw.textbbox((0, 0), sub, font=f_cover_sub)
     w_s = bb_s[2] - bb_s[0]
@@ -82,58 +100,50 @@ def render_content_page(page_items, page_num):
     img = Image.new("L", (width, height), 255)
     draw = ImageDraw.Draw(img)
 
-    left = 28
-    right = width - 28
+    slot_starts = [24, 268, 512]
     slot_height = 236
-    slot_starts = [28, 270, 512]
 
     for i, item in enumerate(page_items):
         sy = slot_starts[i]
 
-        # 1. Asma number top right
-        no_str = f"Asma {item['urutan']} / 99"
-        bb_no = draw.textbbox((0, 0), no_str, font=f_item_no)
+        # 1. Asma number (Centered, subtle)
+        no_str = f"ASMA {item['urutan']} / 99"
+        bb_no = draw.textbbox((0, 0), no_str, font=f_no)
         w_no = bb_no[2] - bb_no[0]
-        draw.text((right - w_no, sy), no_str, fill=80, font=f_item_no)
+        draw.text(((width - w_no) // 2, sy), no_str, fill=90, font=f_no)
 
-        # 2. Arabic text right aligned (Amiri Naskh font)
-        ar_bidi = render_arabic(item['arab'], f_item_ar)
-        bb_ar = draw.textbbox((0, 0), ar_bidi, font=f_item_ar)
+        # 2. Arabic with FULL HARAKAT (Amiri font, Centered!)
+        ar_bidi = render_arabic(item['arab'], f_ar)
+        bb_ar = draw.textbbox((0, 0), ar_bidi, font=f_ar)
         w_ar = bb_ar[2] - bb_ar[0]
         ar_y = sy + 22
-        draw.text((right - w_ar, ar_y), ar_bidi, fill=0, font=f_item_ar)
+        draw.text(((width - w_ar) // 2, ar_y), ar_bidi, fill=0, font=f_ar)
 
-        # 3. Latin text left aligned
-        lat_y = ar_y + (bb_ar[3] - bb_ar[1]) + 20
-        draw.text((left, lat_y), item['latin'], fill=0, font=f_item_latin)
-        bb_lat = draw.textbbox((0, 0), item['latin'], font=f_item_latin)
+        # 3. Latin (Centered, Bold)
+        lat_y = ar_y + (bb_ar[3] - bb_ar[1]) + 14
+        bb_lat = draw.textbbox((0, 0), item['latin'], font=f_latin)
+        w_lat = bb_lat[2] - bb_lat[0]
+        draw.text(((width - w_lat) // 2, lat_y), item['latin'], fill=0, font=f_latin)
 
-        # 4. Arti left aligned (with word wrapping if long)
-        arti_y = lat_y + (bb_lat[3] - bb_lat[1]) + 6
-        arti_text = item['arti']
-        if len(arti_text) > 38:
-            words = arti_text.split()
-            l1, l2 = "", ""
-            for w in words:
-                if len(l1 + " " + w) <= 36:
-                    l1 = (l1 + " " + w).strip()
-                else:
-                    l2 = (l2 + " " + w).strip()
-            draw.text((left, arti_y), l1, fill=0, font=f_item_arti)
-            draw.text((left, arti_y + 22), l2, fill=0, font=f_item_arti)
-        else:
-            draw.text((left, arti_y), arti_text, fill=0, font=f_item_arti)
+        # 4. Arti (Centered, properly word-wrapped, NO truncation!)
+        arti_lines = wrap_text(item['arti'], max_chars=38)
+        cur_arti_y = lat_y + (bb_lat[3] - bb_lat[1]) + 8
+        for line in arti_lines:
+            bb_line = draw.textbbox((0, 0), line, font=f_arti)
+            w_line = bb_line[2] - bb_line[0]
+            draw.text(((width - w_line) // 2, cur_arti_y), line, fill=20, font=f_arti)
+            cur_arti_y += 22
 
-        # Divider line between items
+        # Symmetrical divider line between items
         if i < 2:
             div_y = sy + slot_height - 6
-            draw.line([(left, div_y), (right, div_y)], fill=0, width=1)
+            draw.line([(32, div_y), (width - 32, div_y)], fill=120, width=1)
 
-    # Page number at bottom
+    # Page number at bottom (Centered)
     p_str = str(page_num)
     bb_p = draw.textbbox((0, 0), p_str, font=f_page_num)
     w_p = bb_p[2] - bb_p[0]
-    draw.text(((width - w_p) // 2, 758), p_str, fill=0, font=f_page_num)
+    draw.text(((width - w_p) // 2, 762), p_str, fill=0, font=f_page_num)
 
     return img
 
@@ -141,7 +151,7 @@ def render_penutup():
     img = Image.new("L", (width, height), 255)
     draw = ImageDraw.Draw(img)
 
-    # Centered Ayat Quran in Amiri font
+    # Centered Ayat Quran with full harakat
     ar_verse = "وَلِلَّهِ الْأَسْمَاءُ الْحُسْنَىٰ فَادْعُوهُ بِهَا"
     ar_bidi = render_arabic(ar_verse, f_penutup_ar)
     bb_ar = draw.textbbox((0, 0), ar_bidi, font=f_penutup_ar)
@@ -186,7 +196,6 @@ def render_penutup():
     return img
 
 def image_to_xtg(pil_img):
-    width, height = 480, 800
     byte_stride = width // 8
     data = bytearray(byte_stride * height)
     pixels = pil_img.load()
@@ -229,38 +238,38 @@ def build_xtc(xtg_blobs):
 
     return buf
 
-if __name__ == "__main__":
-    all_pages = []
+# Main Generation
+all_pages = []
 
-    print("Rendering Cover...")
-    cover_img = render_cover()
-    all_pages.append(cover_img)
+print("Rendering Symmetrical Cover...")
+cover_img = render_cover()
+all_pages.append(cover_img)
 
-    for p_idx in range(0, 99, 3):
-        chunk = items[p_idx:p_idx+3]
-        page_num = (p_idx // 3) + 1
-        p_img = render_content_page(chunk, page_num)
-        all_pages.append(p_img)
+for p_idx in range(0, 99, 3):
+    chunk = items[p_idx:p_idx+3]
+    page_num = (p_idx // 3) + 1
+    p_img = render_content_page(chunk, page_num)
+    all_pages.append(p_img)
 
-    print("Rendering Penutup...")
-    penutup_img = render_penutup()
-    all_pages.append(penutup_img)
+print("Rendering Symmetrical Penutup...")
+penutup_img = render_penutup()
+all_pages.append(penutup_img)
 
-    print(f"Total pages rendered: {len(all_pages)}")
+print(f"Total pages rendered: {len(all_pages)}")
 
-    # Save preview images
-    preview_dir = "docs/preview"
-    os.makedirs(preview_dir, exist_ok=True)
-    cover_img.save(os.path.join(preview_dir, "00-sampul.png"))
-    all_pages[1].save(os.path.join(preview_dir, "01-halaman.png"))
-    all_pages[2].save(os.path.join(preview_dir, "02-halaman.png"))
-    penutup_img.save(os.path.join(preview_dir, "03-penutup.png"))
-    print("Preview images saved.")
+# Save preview images
+preview_dir = "docs/preview"
+os.makedirs(preview_dir, exist_ok=True)
+cover_img.save(os.path.join(preview_dir, "00-sampul.png"))
+all_pages[1].save(os.path.join(preview_dir, "01-halaman.png"))
+all_pages[4].save(os.path.join(preview_dir, "02-halaman.png")) # Page 4 (Items 10-12)
+penutup_img.save(os.path.join(preview_dir, "03-penutup.png"))
+print("Preview images saved.")
 
-    xtg_blobs = [image_to_xtg(img) for img in all_pages]
-    xtc_bytes = build_xtc(xtg_blobs)
+xtg_blobs = [image_to_xtg(img) for img in all_pages]
+xtc_bytes = build_xtc(xtg_blobs)
 
-    with open("Asmaul-Husna.xtc", "wb") as f:
-        f.write(xtc_bytes)
+with open("Asmaul-Husna.xtc", "wb") as f:
+    f.write(xtc_bytes)
 
-    print(f"SUCCESS! Asmaul-Husna.xtc compiled ({len(xtc_bytes) / 1024:.1f} KB)")
+print(f"SUCCESS! Asmaul-Husna.xtc compiled ({len(xtc_bytes) / 1024:.1f} KB)")

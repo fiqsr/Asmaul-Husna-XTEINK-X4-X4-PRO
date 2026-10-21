@@ -140,7 +140,7 @@
   <div class="app-bar">
     <div>
       <h1>Generator Asma'ul Husna untuk Xteink X4</h1>
-      <p>Berdasarkan spesifikasi format .XTC andidewanto/xteink-x4-quran-indonesia &amp; API haikelz/asmaul-husna-api</p>
+      <p>Simetris &#8226; Lengkap Harakat &#8226; Font Amiri &#8226; 480x800 E-Ink</p>
     </div>
     <button id="btnExport" class="btn export-btn">EXPORT .XTC</button>
   </div>
@@ -150,7 +150,7 @@
       <div class="search-wrap">
         <input type="search" id="searchInput" placeholder="Cari nama Latin atau Arab..." />
       </div>
-      <div class="validasi">Lengkap &#8226; 99 Asma'ul Husna &#8226; 35 Halaman</div>
+      <div class="validasi">Lengkap &#8226; 99 Asma'ul Husna Berharakat &#8226; 35 Halaman</div>
       <ul class="asma-list" id="asmaList"></ul>
     </div>
 
@@ -169,22 +169,15 @@
 
   <script>
     let asmaData = [];
-    let currentPage = 0; // 0 = Cover, 1..33 = Content, 34 = Penutup
+    let currentPage = 0;
     const totalPages = 35;
 
     const canvas = document.getElementById("stage");
     const ctx = canvas.getContext("2d");
 
     async function loadData() {
-      try {
-        const resp = await fetch("asmaul_husna.json");
-        asmaData = await resp.json();
-      } catch (e) {
-        console.error("Gagal load json lokal, fetch dari API...", e);
-        const resp = await fetch("https://asmaul-husna-api.vercel.app/api/all");
-        const json = await resp.json();
-        asmaData = json.data;
-      }
+      const resp = await fetch("asmaul_husna.json");
+      asmaData = await resp.json();
       renderList();
       renderPage(currentPage);
     }
@@ -229,10 +222,10 @@
     }
 
     function renderCover() {
-      // 1. Arabic (Centered horizontally, Y = 220)
+      // 1. Arabic (Centered, full harakat, Y = 220)
       ctx.textAlign = "center";
-      ctx.font = "bold 54px 'Amiri', Tahoma, serif";
-      ctx.fillText("الأسماء الحسنى", 240, 220);
+      ctx.font = "bold 56px 'Amiri', serif";
+      ctx.fillText("الْأَسْمَاءُ الْحُسْنَىٰ", 240, 220);
 
       // 2. Title (Centered, Y = 360)
       ctx.font = "bold 34px Segoe UI, Roboto, sans-serif";
@@ -263,56 +256,55 @@
     function renderContent(pageNum) {
       const startIdx = (pageNum - 1) * 3;
       const chunk = asmaData.slice(startIdx, startIdx + 3);
-      const slotStarts = [28, 270, 512];
+      const slotStarts = [24, 268, 512];
       const slotHeight = 236;
 
       chunk.forEach((item, i) => {
         const sy = slotStarts[i];
 
-        // Top divider line if not first
-        if (i > 0) {
+        // Symmetrical Layout: All Centered
+        // 1. Asma number
+        ctx.textAlign = "center";
+        ctx.font = "13px Segoe UI, Roboto, sans-serif";
+        ctx.fillStyle = "#555555";
+        ctx.fillText(`ASMA ${item.urutan} / 99`, 240, sy + 10);
+
+        // 2. Arabic with FULL HARAKAT (Amiri font)
+        ctx.fillStyle = "#000000";
+        ctx.font = "48px 'Amiri', serif";
+        ctx.fillText(item.arab, 240, sy + 66);
+
+        // 3. Latin (Centered Bold)
+        ctx.font = "bold 23px Segoe UI, Roboto, sans-serif";
+        ctx.fillText(item.latin, 240, sy + 130);
+
+        // 4. Arti (Centered with word wrapping)
+        ctx.font = "17px Segoe UI, Roboto, sans-serif";
+        ctx.fillStyle = "#222222";
+        const arti = item.arti;
+        const words = arti.split(" ");
+        let l1 = "", l2 = "";
+        for (const w of words) {
+          if ((l1 + " " + w).length <= 36) l1 = (l1 + " " + w).trim();
+          else l2 = (l2 + " " + w).trim();
+        }
+        ctx.fillText(l1, 240, sy + 162);
+        if (l2) {
+          ctx.fillText(l2, 240, sy + 186);
+        }
+
+        // Symmetrical Divider line
+        if (i < 2) {
           ctx.beginPath();
-          ctx.moveTo(28, sy - 14);
-          ctx.lineTo(480 - 28, sy - 14);
-          ctx.strokeStyle = "#000000";
+          ctx.moveTo(32, sy + slotHeight - 6);
+          ctx.lineTo(480 - 32, sy + slotHeight - 6);
+          ctx.strokeStyle = "#777777";
           ctx.lineWidth = 1;
           ctx.stroke();
         }
-
-        // 1. Asma number top right
-        ctx.textAlign = "right";
-        ctx.font = "14px Segoe UI, Roboto, sans-serif";
-        ctx.fillStyle = "#555555";
-        ctx.fillText(`Asma ${item.urutan} / 99`, 480 - 28, sy);
-
-        // 2. Arabic text in Amiri font
-        ctx.fillStyle = "#000000";
-        ctx.font = "50px 'Amiri', serif";
-        ctx.fillText(item.arab, 480 - 28, sy + 58);
-
-        // 3. Latin name left aligned
-        ctx.textAlign = "left";
-        ctx.font = "bold 24px Segoe UI, Roboto, sans-serif";
-        ctx.fillText(item.latin, 28, sy + 138);
-
-        // 4. Arti left aligned (with wrap)
-        ctx.font = "19px Segoe UI, Roboto, sans-serif";
-        const arti = item.arti;
-        if (arti.length > 38) {
-          const words = arti.split(" ");
-          let l1 = "", l2 = "";
-          for (const w of words) {
-            if ((l1 + " " + w).length <= 36) l1 = (l1 + " " + w).trim();
-            else l2 = (l2 + " " + w).trim();
-          }
-          ctx.fillText(l1, 28, sy + 172);
-          ctx.fillText(l2, 28, sy + 196);
-        } else {
-          ctx.fillText(arti, 28, sy + 172);
-        }
       });
 
-      // Bottom page number
+      // Bottom page number (Centered)
       ctx.textAlign = "center";
       ctx.font = "bold 17px Segoe UI, Roboto, sans-serif";
       ctx.fillStyle = "#000000";
