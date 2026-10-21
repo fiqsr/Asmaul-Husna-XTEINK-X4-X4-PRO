@@ -411,16 +411,17 @@
         ctx.fillStyle = "#000000";
         ctx.fillText(item.latin, 240, sy + 134);
 
-        // 4. Arti / Translation (Centered, Lato Bold 21px, sturdy & crisp, NOT thin!)
-        ctx.font = "bold 21px 'Lato', sans-serif";
-        ctx.fillStyle = "#000000";
+        // 4. Arti / Translation (Centered, 24px regular, NOT bold, matching 99 Nama-Nama Agung Allah)
+        ctx.font = "24px 'Roboto', sans-serif";
+        ctx.fillStyle = "#1a1a1a";
         const cleanArti = item.arti.replace(/([^\s])\(/g, "$1 (");
         const words = cleanArti.split(" ");
         const artiLines = [];
         let curLine = "";
         for (const w of words) {
-          if ((curLine + " " + w).trim().length <= 30) {
-            curLine = (curLine + " " + w).trim();
+          const testLine = (curLine + " " + w).trim();
+          if (ctx.measureText(testLine).width <= 420) {
+            curLine = testLine;
           } else {
             if (curLine) artiLines.push(curLine);
             curLine = w;
@@ -428,9 +429,9 @@
         }
         if (curLine) artiLines.push(curLine);
 
-        const startArtiY = artiLines.length === 1 ? sy + 175 : sy + 165;
+        const startArtiY = artiLines.length === 1 ? sy + 178 : sy + 168;
         artiLines.forEach((line, idx) => {
-          ctx.fillText(line, 240, startArtiY + idx * 28);
+          ctx.fillText(line, 240, startArtiY + idx * 30);
         });
 
         // Divider line between cards: 1px solid black line
@@ -471,9 +472,9 @@
       ctx.lineWidth = 1;
       ctx.stroke();
 
-      // Translation: Lato Bold 21px (crisp, not thin)
+      // Translation: Roboto 22px regular (NOT bold)
       ctx.textBaseline = "top";
-      ctx.font = "bold 21px 'Lato', sans-serif";
+      ctx.font = "22px 'Roboto', sans-serif";
       const lines = [
         "“Hanya milik Allah asmaaul husna,",
         "maka bermohonlah kepada-Nya",
