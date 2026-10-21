@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Generator Asma'ul Husna untuk Xteink X4</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: dark;
@@ -81,7 +84,7 @@
     .asma-item:hover { background: var(--md-surface-container-high); }
     .asma-item .urutan { font-weight: bold; width: 30px; font-size: 0.85rem; color: var(--md-primary); }
     .asma-item .latin { font-weight: 500; font-size: 0.9rem; flex: 1; }
-    .asma-item .arab { font-family: Tahoma, sans-serif; font-size: 1.1rem; direction: rtl; }
+    .asma-item .arab { font-family: 'Amiri', serif; font-size: 1.2rem; direction: rtl; }
 
     .pane-preview {
       display: flex;
@@ -115,7 +118,6 @@
       padding: 8px 24px;
     }
 
-    /* 480x800 Canvas Frame */
     .screen-frame {
       width: 480px;
       height: 800px;
@@ -165,7 +167,6 @@
     </div>
   </div>
 
-  <script src="asmaul_husna.json" type="application/json" id="dataJson"></script>
   <script>
     let asmaData = [];
     let currentPage = 0; // 0 = Cover, 1..33 = Content, 34 = Penutup
@@ -200,7 +201,6 @@
         li.className = "asma-item";
         li.innerHTML = `<span class="urutan">${item.urutan}</span><span class="latin">${item.latin}</span><span class="arab">${item.arab}</span>`;
         li.onclick = () => {
-          // Jump to page containing this item
           currentPage = Math.floor((item.urutan - 1) / 3) + 1;
           renderPage(currentPage);
         };
@@ -229,25 +229,26 @@
     }
 
     function renderCover() {
-      // 1. Arabic
+      // 1. Arabic (Centered horizontally, Y = 220)
+      ctx.textAlign = "center";
+      ctx.font = "bold 54px 'Amiri', Tahoma, serif";
+      ctx.fillText("الأسماء الحسنى", 240, 220);
+
+      // 2. Title (Centered, Y = 360)
+      ctx.font = "bold 34px Segoe UI, Roboto, sans-serif";
+      ctx.fillText("Asma'ul Husna", 240, 360);
+
+      // 3. Subtitle (Centered, Y = 405)
+      ctx.font = "20px Segoe UI, Roboto, sans-serif";
+      ctx.fillText("99 Nama-Nama Agung Allah", 240, 405);
+
+      // 4. Meta (Right-aligned, right margin 48)
       ctx.textAlign = "right";
-      ctx.font = "bold 64px Tahoma, sans-serif";
-      ctx.fillText("الأسماء الحسنى", 480 - 54, 214);
-
-      // 2. Title
-      ctx.font = "bold 38px Segoe UI, sans-serif";
-      ctx.fillText("Asma'ul Husna", 480 - 54, 350);
-
-      // 3. Subtitle
-      ctx.font = "24px Segoe UI, sans-serif";
-      ctx.fillText("99 Nama-Nama Agung Allah", 480 - 54, 405);
-
-      // 4. Meta
-      ctx.font = "bold 16px Segoe UI, sans-serif";
-      ctx.fillText("99 Asma • Teks Arab, Latin & Arti", 480 - 54, 550);
+      ctx.font = "bold 15px Segoe UI, Roboto, sans-serif";
+      ctx.fillText("99 Asma • Teks Arab, Latin & Arti", 480 - 48, 560);
 
       // 5. Sumber
-      ctx.font = "14px Segoe UI, sans-serif";
+      ctx.font = "13px Segoe UI, Roboto, sans-serif";
       const lines = [
         "Sumber Data: Asmaul Husna API",
         "Repository: haikelz/asmaul-husna-api",
@@ -255,76 +256,88 @@
         "v 1.0 - 2026"
       ];
       lines.forEach((l, idx) => {
-        ctx.fillText(l, 480 - 54, 592 + idx * 22);
+        ctx.fillText(l, 480 - 48, 592 + idx * 20);
       });
     }
 
     function renderContent(pageNum) {
       const startIdx = (pageNum - 1) * 3;
       const chunk = asmaData.slice(startIdx, startIdx + 3);
+      const slotStarts = [28, 270, 512];
+      const slotHeight = 236;
 
-      let y = 30;
       chunk.forEach((item, i) => {
+        const sy = slotStarts[i];
+
+        // Top divider line if not first
         if (i > 0) {
           ctx.beginPath();
-          ctx.moveTo(24, y);
-          ctx.lineTo(480 - 24, y);
+          ctx.moveTo(28, sy - 14);
+          ctx.lineTo(480 - 28, sy - 14);
           ctx.strokeStyle = "#000000";
           ctx.lineWidth = 1;
           ctx.stroke();
-          y += 18;
         }
 
-        // Asma no
+        // 1. Asma number top right
         ctx.textAlign = "right";
-        ctx.font = "14px Segoe UI, sans-serif";
-        ctx.fillStyle = "#444444";
-        ctx.fillText(`Asma ${item.urutan} / 99`, 480 - 24, y);
-        y += 26;
+        ctx.font = "14px Segoe UI, Roboto, sans-serif";
+        ctx.fillStyle = "#555555";
+        ctx.fillText(`Asma ${item.urutan} / 99`, 480 - 28, sy);
 
-        // Arabic
+        // 2. Arabic text in Amiri font
         ctx.fillStyle = "#000000";
-        ctx.font = "bold 46px Tahoma, sans-serif";
-        ctx.fillText(item.arab, 480 - 24, y + 20);
-        y += 56;
+        ctx.font = "50px 'Amiri', serif";
+        ctx.fillText(item.arab, 480 - 28, sy + 58);
 
-        // Latin
+        // 3. Latin name left aligned
         ctx.textAlign = "left";
-        ctx.font = "bold 24px Segoe UI, sans-serif";
-        ctx.fillText(item.latin, 24, y);
-        y += 28;
+        ctx.font = "bold 24px Segoe UI, Roboto, sans-serif";
+        ctx.fillText(item.latin, 28, sy + 138);
 
-        // Arti
-        ctx.font = "19px Segoe UI, sans-serif";
-        ctx.fillText(item.arti, 24, y);
-        y += 36;
+        // 4. Arti left aligned (with wrap)
+        ctx.font = "19px Segoe UI, Roboto, sans-serif";
+        const arti = item.arti;
+        if (arti.length > 38) {
+          const words = arti.split(" ");
+          let l1 = "", l2 = "";
+          for (const w of words) {
+            if ((l1 + " " + w).length <= 36) l1 = (l1 + " " + w).trim();
+            else l2 = (l2 + " " + w).trim();
+          }
+          ctx.fillText(l1, 28, sy + 172);
+          ctx.fillText(l2, 28, sy + 196);
+        } else {
+          ctx.fillText(arti, 28, sy + 172);
+        }
       });
 
       // Bottom page number
       ctx.textAlign = "center";
-      ctx.font = "bold 17px Segoe UI, sans-serif";
+      ctx.font = "bold 17px Segoe UI, Roboto, sans-serif";
+      ctx.fillStyle = "#000000";
       ctx.fillText(String(pageNum), 240, 765);
     }
 
     function renderPenutup() {
       ctx.textAlign = "center";
-      ctx.font = "bold 32px Tahoma, sans-serif";
-      ctx.fillText("وَلِلَّهِ الْأَسْمَاءُ الْحُسْنَىٰ فَادْعُوهُ بِهَا", 240, 290);
+      ctx.font = "bold 38px 'Amiri', serif";
+      ctx.fillText("وَلِلَّهِ الْأَسْمَاءُ الْحُسْنَىٰ فَادْعُوهُ بِهَا", 240, 275);
 
       ctx.beginPath();
-      ctx.moveTo(180, 340);
-      ctx.lineTo(300, 340);
+      ctx.moveTo(180, 345);
+      ctx.lineTo(300, 345);
       ctx.strokeStyle = "#000000";
       ctx.stroke();
 
-      ctx.font = "16px Segoe UI, sans-serif";
+      ctx.font = "16px Segoe UI, Roboto, sans-serif";
       ctx.fillText("“Hanya milik Allah asmaaul husna,", 240, 380);
       ctx.fillText("maka bermohonlah kepada-Nya", 240, 406);
       ctx.fillText("dengan menyebut asmaaul husna itu.”", 240, 432);
       ctx.fillText("— QS. Al-A'raf: 180", 240, 470);
 
-      ctx.font = "14px Segoe UI, sans-serif";
-      ctx.fillStyle = "#444444";
+      ctx.font = "13px Segoe UI, Roboto, sans-serif";
+      ctx.fillStyle = "#555555";
       ctx.fillText("Asma'ul Husna untuk Xteink X4", 240, 660);
       ctx.fillText("API: haikelz/asmaul-husna-api", 240, 684);
       ctx.fillText("Format: andidewanto/xteink-x4-quran-indonesia", 240, 708);
@@ -344,7 +357,6 @@
       }
     };
 
-    // Bitmap and XTC Generator
     function bitmapXtg(canvasEl) {
       const lebar = 480;
       const tinggi = 800;
@@ -362,7 +374,7 @@
       }
       const header = new Uint8Array(22);
       const view = new DataView(header.buffer);
-      header.set([0x58, 0x54, 0x47, 0x00], 0); // "XTG\0"
+      header.set([0x58, 0x54, 0x47, 0x00], 0);
       view.setUint16(4, lebar, true);
       view.setUint16(6, tinggi, true);
       view.setUint32(10, data.length, true);
@@ -381,7 +393,7 @@
 
       const file = new Uint8Array(ukuran);
       const view = new DataView(file.buffer);
-      file.set([0x58, 0x54, 0x43, 0x00], 0); // "XTC\0"
+      file.set([0x58, 0x54, 0x43, 0x00], 0);
       file[4] = 1;
       view.setUint16(6, jumlah, true);
       view.setUint32(12, 1, true);
