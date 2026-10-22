@@ -1,5 +1,9 @@
 # Asma'ul Husna untuk Xteink X4 & X4 Pro
 
+[![Release](https://img.shields.io/github/v/release/fiqsr/Asmaul-Husna-XTEINK-X4-X4-PRO?label=Release&color=2ea44f)](https://github.com/fiqsr/Asmaul-Husna-XTEINK-X4-X4-PRO/releases/latest)
+[![Download XTC](https://img.shields.io/badge/Unduh-.XTC%20(Xteink%20X4)-blue?logo=github)](https://github.com/fiqsr/Asmaul-Husna-XTEINK-X4-X4-PRO/releases/download/v1.0.0/Asmaul-Husna.xtc)
+[![Download EPUB](https://img.shields.io/badge/Unduh-.EPUB-purple?logo=book)](https://github.com/fiqsr/Asmaul-Husna-XTEINK-X4-X4-PRO/releases/download/v1.0.0/Asmaul_Husna_XTEINK_X4.epub)
+
 Koleksi lengkap **99 Asma'ul Husna dalam format `.xtc` dan `.epub`** yang disiapkan khusus untuk dibaca pada perangkat e-reader / e-paper saku **Xteink X4 & Xteink X4 Pro** (resolusi 480 × 800 piksel).
 
 Disusun dan dikembangkan oleh **fiqsr** ([github.com/fiqsr/Asmaul-Husna-XTEINK-X4-X4-PRO](https://github.com/fiqsr/Asmaul-Husna-XTEINK-X4-X4-PRO)).
